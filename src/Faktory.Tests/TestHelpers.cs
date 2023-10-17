@@ -33,6 +33,23 @@ namespace Faktory.Tests
             {
                 Directory.CreateDirectory(path);
             }
+
+            public static IEnumerable<string> CreateFolderWithFiles(string path, int howMany)
+            {
+                Directory.CreateDirectory(path);
+                return CreateFiles(howMany, path);
+            }
+
+            public static IEnumerable<string> CreateFoldersWithFiles(string root, int howMany)
+            {
+                var files = new List<string>();
+                for (var i = 0; i < howMany; i++)
+                {
+                     files.AddRange(CreateFolderWithFiles(Path.Combine(root, $"folder{i}"), howMany));
+                }
+
+                return files;
+            }
         }
     }
 }
