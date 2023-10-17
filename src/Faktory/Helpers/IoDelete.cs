@@ -50,4 +50,24 @@ namespace Faktory.Helpers;
             }
             return new BuildStepResult(Status.Ok, string.Empty);
         }
+
+        /// <summary>
+        /// Deletes a directory.
+        /// </summary>
+        /// <param name="directory">The directory to delete.</param>
+        /// <returns></returns>
+        public static BuildStepResult DeleteDirectory(string directory)
+        {
+            try
+            {
+                Boot.Logger.Info($"Deleting directory: `{directory}`");
+                Directory.Delete(directory, true);
+                return new BuildStepResult(Status.Ok, string.Empty);
+            }
+            catch (Exception e)
+            {
+                Boot.Logger.Error($"Error deleting `{directory}`: {e.Message}");
+                return new BuildStepResult(Status.Error, e.Message);
+            }
+        }
     }

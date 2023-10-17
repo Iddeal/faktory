@@ -63,5 +63,42 @@ namespace Faktory.Tests.Integration.Helpers
                 Assert.IsFalse(File.Exists(file));
             }
         }
+
+        [Test, Order(4)]
+        public void DeleteDirectory_WhenEmpty_Succeeds()
+        {
+            // Arrange 
+            // Create an empty directory
+            var directory = TestHelpers.Disk.CreateFolder(Path.Combine(BasePath, "DeleteDirTestFolder"));
+
+            // Act - Delete the directory
+            var result = global::Faktory.Helpers.Io.DeleteDirectory(directory);
+
+            // Assert
+            Assert.IsEmpty(result.Message);
+            Assert.AreEqual(Status.Ok, result.Status);
+            Assert.IsFalse(Directory.Exists(directory));
+        }
+
+        [Test, Order(5)]
+        public void DeleteDirectory_WhenNotEmpty_Succeeds()
+        {
+            // Arrange 
+            // Create a directory with files
+            var directory = Path.Combine(BasePath, "DeleteDirTestFolder");
+            var files = TestHelpers.Disk.CreateFolderWithFiles(directory, 4);
+
+            // Act - Delete the directory
+            var result = global::Faktory.Helpers.Io.DeleteDirectory(directory);
+
+            // Assert
+            Assert.IsEmpty(result.Message);
+            Assert.AreEqual(Status.Ok, result.Status);
+            Assert.IsFalse(Directory.Exists(directory));
+            foreach (var file in files)
+            {
+                Assert.IsFalse(File.Exists(file));
+            }
+        }
     }
 }

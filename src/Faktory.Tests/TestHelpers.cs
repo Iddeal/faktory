@@ -42,9 +42,9 @@ namespace Faktory.Tests
                 return files;
             }
 
-            public static void CreateFolder(string path)
+            public static string CreateFolder(string path)
             {
-                Directory.CreateDirectory(path);
+                return Directory.CreateDirectory(path).FullName;
             }
 
             public static IEnumerable<string> CreateFolderWithFiles(string path, int howMany)
