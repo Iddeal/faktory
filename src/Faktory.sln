@@ -5,7 +5,11 @@ VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Faktory", "Faktory\Faktory.csproj", "{4CB73894-ED3C-42DC-900E-9561F123D9AF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Faktory.Sample", "Faktory.Sample\Faktory.Sample.csproj", "{1AEFF54A-48A4-4A07-9EFF-288202B91DD2}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Faktory.Tests", "Faktory.Tests\Faktory.Tests.csproj", "{66166D38-9413-40A3-84D1-3E0D6F0367F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessTest", "ProcessTest\ProcessTest.csproj", "{301B9114-BBAF-4F21-A89D-06FEB3952F0B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,9 +21,15 @@ Global
 		{4CB73894-ED3C-42DC-900E-9561F123D9AF}.Debug|x64.Build.0 = Debug|x64
 		{4CB73894-ED3C-42DC-900E-9561F123D9AF}.Release|x64.ActiveCfg = Release|x64
 		{4CB73894-ED3C-42DC-900E-9561F123D9AF}.Release|x64.Build.0 = Release|x64
+		{1AEFF54A-48A4-4A07-9EFF-288202B91DD2}.Debug|x64.ActiveCfg = Debug|x64
+		{1AEFF54A-48A4-4A07-9EFF-288202B91DD2}.Debug|x64.Build.0 = Debug|x64
+		{1AEFF54A-48A4-4A07-9EFF-288202B91DD2}.Release|x64.ActiveCfg = Release|x64
 		{66166D38-9413-40A3-84D1-3E0D6F0367F3}.Debug|x64.ActiveCfg = Debug|x64
 		{66166D38-9413-40A3-84D1-3E0D6F0367F3}.Debug|x64.Build.0 = Debug|x64
 		{66166D38-9413-40A3-84D1-3E0D6F0367F3}.Release|x64.ActiveCfg = Release|x64
+		{301B9114-BBAF-4F21-A89D-06FEB3952F0B}.Debug|x64.ActiveCfg = Debug|x64
+		{301B9114-BBAF-4F21-A89D-06FEB3952F0B}.Debug|x64.Build.0 = Debug|x64
+		{301B9114-BBAF-4F21-A89D-06FEB3952F0B}.Release|x64.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -72,10 +72,12 @@
   <ItemGroup>
     <Compile Include="Assertions.cs" />
     <Compile Include="FaktoryTests.cs" />
+    <Compile Include="Integration\Helpers\Io\CleanTests.cs" />
     <Compile Include="Integration\Helpers\Io\CopyTests.cs" />
     <Compile Include="OptionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHelpers.cs" />
+    <Compile Include="Integration\InternalUtilities\FileUsageTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

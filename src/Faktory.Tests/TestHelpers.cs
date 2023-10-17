@@ -8,6 +8,16 @@ namespace Faktory.Tests
     {
         public static class Disk
         {
+            public static void LockFile(string filePath, int secondsToWait)
+            {
+                using (var fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
+                {
+                    // Wait for the specified seconds or until the lock is released
+                    fs.Lock(0, fs.Length);
+                    Thread.Sleep(secondsToWait * 1000);
+                }
+            }
+
             public static string CreateFile(string path, string name)
             {
                 if (Directory.Exists(path) == false)
