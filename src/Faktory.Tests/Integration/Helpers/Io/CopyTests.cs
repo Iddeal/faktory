@@ -69,5 +69,22 @@ namespace Faktory.Tests.Integration.Helpers
             Assert.IsTrue(File.Exists(copiedFile1));
         }
 
+        [Test, Order(3)]
+        public void Copy_MultipleFiles_ShouldSucceed()
+        {
+            // Destination should be empty now
+            Assert.IsEmpty(Directory.GetFiles(_destination));
+
+            //Create dummy files in the BasePath
+            var files = TestHelpers.Disk.CreateFiles(25, BasePath).ToArray();
+
+            //Act - Copy the files
+            var result = Io.Copy(_destination, files);
+
+            //Assert
+            Assert.IsEmpty(result.Message);
+            Assert.AreEqual(Status.Ok, result.Status);
+            Assert.IsTrue(Directory.GetFiles(_destination).Length == 25);
+        }
     }
 }

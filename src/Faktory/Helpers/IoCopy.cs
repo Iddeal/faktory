@@ -37,4 +37,24 @@ public static partial class Io
         }
     }
 
+    /// <summary>
+    /// Copies each file in <paramref name="files"/> to <paramref name="destination"/>.
+    /// If the file already exists, it is overwritten.
+    /// If the <paramref name="destination"/> does not exist, it is created.
+    /// </summary>
+    /// <param name="files">The file to copy.</param>
+    /// <param name="destination">The directory to copy <paramref name="files" /> to.</param>
+    /// <returns></returns>
+    public static BuildStepResult Copy(string destination, string[] files)
+    {
+        foreach (var file in files)
+        {
+            var result = Copy(file, destination);
+            if (result.Status == Status.Error)
+            {
+                return result;
+            }
+        }
+        return new BuildStepResult(Status.Ok, string.Empty);
+    }
 }

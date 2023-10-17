@@ -21,6 +21,14 @@ namespace Faktory.Tests
                 return fileName;
             }
 
+            public static IEnumerable<string> CreateFiles(int howMany, string path)
+            {
+                for (var i = 0; i < howMany; i++)
+                {
+                    yield return CreateFile(path, $"test-file{i}.txt");
+                }
+            }
+
             public static void CreateFolder(string path)
             {
                 Directory.CreateDirectory(path);
