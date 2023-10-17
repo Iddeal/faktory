@@ -33,10 +33,13 @@ namespace Faktory.Tests
 
             public static IEnumerable<string> CreateFiles(int howMany, string path)
             {
+                var files = new List<string>();
                 for (var i = 0; i < howMany; i++)
                 {
-                    yield return CreateFile(path, $"test-file{i}.txt");
+                    files.Add(CreateFile(path, $"test-file{i}.txt"));
                 }
+
+                return files;
             }
 
             public static void CreateFolder(string path)
