@@ -66,6 +66,7 @@
     <Compile Include="Exceptions\NotBootedException.cs" />
     <Compile Include="Faktory.cs" />
     <Compile Include="FaktoryProgram.cs" />
+    <Compile Include="Helpers\IoCopy.cs" />
     <Compile Include="Logging\ILogWriter.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\LogLine.cs" />
