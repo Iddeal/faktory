@@ -74,6 +74,7 @@
     <Compile Include="FaktoryTests.cs" />
     <Compile Include="Integration\Helpers\Io\CleanTests.cs" />
     <Compile Include="Integration\Helpers\Io\CopyTests.cs" />
+    <Compile Include="Integration\Helpers\Io\DeleteTests.cs" />
     <Compile Include="Integration\Helpers\ProcessTests.cs" />
     <Compile Include="OptionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -45,5 +45,31 @@ namespace Faktory.Helpers
                 return new BuildStepResult(Status.Error, e.Message);
             }
         }
+
+        /// <summary>
+        /// Deletes a file.
+        /// </summary>
+        /// <param name="file">Full path to file being deleted.</param>
+        /// <returns></returns>
+        public static BuildStepResult DeleteFile(string file)
+        {
+            try
+            {
+                var (inUse, processName) = FileUsage.GetFileUsage(file);
+                if (inUse)
+                {
+                    throw new Exception($"Can't delete {file}. It's locked by {processName}.");
+                }
+                Boot.Logger.Info($"Deleting file: {file}");
+                File.Delete(file);
+
+                return new BuildStepResult(Status.Ok, string.Empty);
+            }
+            catch (Exception e)
+            {
+                Boot.Logger.Error($"Error deleting `{file}`: {e.Message}");
+                return new BuildStepResult(Status.Error, e.Message);
+            }
+        }
     }
 }
