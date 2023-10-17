@@ -29,7 +29,7 @@ namespace Faktory.Tests
         [Test]
         public void FileUsage_ReturnsNameOfProcessLockingFile()
         {
-            // create file and lock it
+            // Create file and lock it
             Task.Run(() => TestHelpers.Disk.LockFile(_filePath, 2));
 
             var (inUse, processName) = FileUsage.GetFileUsage(_filePath);

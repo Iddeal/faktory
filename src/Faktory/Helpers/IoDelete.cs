@@ -19,9 +19,9 @@ namespace Faktory.Helpers;
                 var (inUse, processName) = FileUsage.GetFileUsage(file);
                 if (inUse)
                 {
-                    throw new Exception($"Can't delete {file}. It's locked by {processName}.");
+                    throw new Exception($"Can't delete `{file}`. It's locked by {processName}.");
                 }
-                Boot.Logger.Info($"Deleting file: {file}");
+                Boot.Logger.Info($"Deleting file: `{file}`");
                 File.Delete(file);
 
                 return new BuildStepResult(Status.Ok, string.Empty);

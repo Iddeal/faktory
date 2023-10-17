@@ -15,13 +15,13 @@ namespace Faktory.Tests.Integration.Helpers
         public void Clean_ShouldDeleteFilesAndFoldersInDirectory()
         {
 
-            //Arrange 
+            // Arrange 
             TestHelpers.Disk.CreateFoldersWithFiles(BasePath, 5);
 
-            //Act - Clean the path
+            // Act - Clean the path
             var result = global::Faktory.Helpers.Io.CleanDirectory(BasePath);
 
-            //Assert
+            // Assert
             Assert.IsEmpty(result.Message);
             Assert.AreEqual(Status.Ok, result.Status);
             Assert.IsTrue(Directory.Exists(BasePath));
@@ -30,22 +30,22 @@ namespace Faktory.Tests.Integration.Helpers
         }
 
         [Test, Order(2)]
-        public void Clean_WhenFileInUser_ReportsFileInUse()
+        public void Clean_WhenFileInUse_ReportsFileInUse()
         { 
-            //Arrange 
+            // Arrange 
 
-            //create a file and lock it
+            // Create a file and lock it
             TestHelpers.Disk.CreateFile(BasePath, "lockedFile_clean.txt");
             var filePath = Path.Combine(BasePath, "lockedFile_clean.txt");
 
             Task.Run(() => TestHelpers.Disk.LockFile(filePath, 3));
 
-            //Act - Clean the path
+            // Act - Clean the path
             var result = global::Faktory.Helpers.Io.CleanDirectory(BasePath);
 
-            //Assert
+            // Assert
             Assert.AreEqual(Status.Error, result.Status);
-            Assert.That(result.Message.StartsWith($"Can't delete {filePath}. It's locked by "));
+            Assert.That(result.Message.StartsWith($"Can't delete `{filePath}`. It's locked by "));
         }
     }
 }
