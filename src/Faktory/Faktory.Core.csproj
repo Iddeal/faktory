@@ -7,8 +7,8 @@
     <ProjectGuid>{4CB73894-ED3C-42DC-900E-9561F123D9AF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Faktory</RootNamespace>
-    <AssemblyName>Faktory</AssemblyName>
+    <RootNamespace>Faktory.Core</RootNamespace>
+    <AssemblyName>Faktory.Core</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -69,6 +69,7 @@
     <Compile Include="FaktoryProgram.cs" />
     <Compile Include="Helpers\IoCopy.cs" />
     <Compile Include="Helpers\IoDelete.cs" />
+    <Compile Include="Helpers\MsBuild.cs" />
     <Compile Include="Helpers\Process.cs" />
     <Compile Include="InternalUtilities\FileUsage.cs" />
     <Compile Include="Logging\ILogWriter.cs" />

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Faktory", "Faktory\Faktory.csproj", "{4CB73894-ED3C-42DC-900E-9561F123D9AF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Faktory.Core", "Faktory\Faktory.Core.csproj", "{4CB73894-ED3C-42DC-900E-9561F123D9AF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Faktory.Sample", "Faktory.Sample\Faktory.Sample.csproj", "{1AEFF54A-48A4-4A07-9EFF-288202B91DD2}"
 EndProject

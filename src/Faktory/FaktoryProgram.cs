@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Faktory.Exceptions;
-using Faktory.Extensions;
-using Faktory.Logging;
+using Faktory.Core.Exceptions;
+using Faktory.Core.Extensions;
+using Faktory.Core.Logging;
 using Spectre.Console;
 using Spectre.Console.Rendering;
 
-namespace Faktory
+namespace Faktory.Core
 {
     public static class FaktoryProgram
     {

@@ -1,5 +1,6 @@
 ﻿using System;
-using Faktory.Logging;
+using Faktory.Core;
+using Faktory.Core.Logging;
 using NUnit.Framework;
 
 namespace Faktory.Tests
@@ -101,19 +102,19 @@ namespace Faktory.Tests
         }
     }
 
-    public class TestFaktoryWithOutOverridingRunBuild : Faktory { }
+    public class TestFaktoryWithOutOverridingRunBuild : Core.Faktory { }
 
-    public class TestFaktoryWithOutCallingExecute : Faktory
+    public class TestFaktoryWithOutCallingExecute : Core.Faktory
     {
         protected override void RunBuild() { }
     }
 
-    public class TestFaktoryWithNoTasks : Faktory
+    public class TestFaktoryWithNoTasks : Core.Faktory
     {
         protected override void RunBuild() { Execute(); }
     }
 
-    public class TestFaktoryWithRequiredParameter : Faktory
+    public class TestFaktoryWithRequiredParameter : Core.Faktory
     {
         protected override void RunBuild()
         {
@@ -121,7 +122,7 @@ namespace Faktory.Tests
         }
     }
 
-    public class TestFaktoryWithMultipleTasksFirstFails : Faktory
+    public class TestFaktoryWithMultipleTasksFirstFails : Core.Faktory
     {
         protected override void RunBuild()
         {

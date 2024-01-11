@@ -1,9 +1,9 @@
 using System.IO;
 using System.Linq;
-using Faktory.Helpers;
+using Faktory.Core;
 using NUnit.Framework;
 
-namespace Faktory.Tests.Integration.Helpers
+namespace Faktory.Tests.Integration.Helpers.Io
 {
     [TestFixture]
     [NonParallelizable]
@@ -38,7 +38,7 @@ namespace Faktory.Tests.Integration.Helpers
             var copiedFile1 = Path.Combine(_destination, fileName);
 
             // Act - Copy the file
-            var result = Io.Copy(file1, _destination);
+            var result = Core.Helpers.Io.Copy(file1, _destination);
 
             // Assert
             Assert.IsEmpty(result.Message);
@@ -60,7 +60,7 @@ namespace Faktory.Tests.Integration.Helpers
             var copiedFile1 = Path.Combine(notRealDestination, fileName);
 
             // Act - Copy the file1 to non-existent directory
-            var result = Io.Copy(file1, notRealDestination);
+            var result = Core.Helpers.Io.Copy(file1, notRealDestination);
 
             // Assert
             Assert.IsEmpty(result.Message);
@@ -79,7 +79,7 @@ namespace Faktory.Tests.Integration.Helpers
             var files = TestHelpers.Disk.CreateFiles(25, BasePath).ToArray();
 
             // Act - Copy the files
-            var result = Io.Copy(_destination, files);
+            var result = Core.Helpers.Io.Copy(_destination, files);
 
             // Assert
             Assert.IsEmpty(result.Message);
@@ -116,7 +116,7 @@ namespace Faktory.Tests.Integration.Helpers
             files.ToList().ForEach(x => TestHelpers.Disk.CreateFile(x.Path, x.FileName));
 
             // Act - Copy the files
-            var result = Io.Copy(BasePath, _destination, "*.dll *.exe *.exe.config CefSharp.* *.pak *.dat *.bin", "/S /XF Destination *.vshost* *.xml *.pdb");
+            var result = Core.Helpers.Io.Copy(BasePath, _destination, "*.dll *.exe *.exe.config CefSharp.* *.pak *.dat *.bin", "/S /XF Destination *.vshost* *.xml *.pdb");
 
             // Assert
             Assert.IsEmpty(result.Message);
@@ -141,7 +141,7 @@ namespace Faktory.Tests.Integration.Helpers
         public void Copy_RobocopyWithInvalidParameters_ShouldFail()
         {
             // Act - Copy the files
-            var result = Io.Copy(BasePath, _destination, "*.*", "/I_am_an_invalid_parameter");
+            var result = Core.Helpers.Io.Copy(BasePath, _destination, "*.*", "/I_am_an_invalid_parameter");
 
             // Assert
             Assert.AreEqual(Status.Error, result.Status);
@@ -156,7 +156,7 @@ namespace Faktory.Tests.Integration.Helpers
             var randomFolderName = Path.GetRandomFileName();
 
             // Act - Copy the files
-            var result = Io.Copy(Path.Combine(BasePath, randomFolderName), _destination, "*.*", "");
+            var result = Core.Helpers.Io.Copy(Path.Combine(BasePath, randomFolderName), _destination, "*.*", "");
 
             // Assert
             Assert.AreEqual(Status.Error, result.Status);
@@ -172,7 +172,7 @@ namespace Faktory.Tests.Integration.Helpers
             
             // Act - Copy the non-existent file
             var file1 = Path.Combine(BasePath, "i_dont_exist.txt");
-            var result = Io.Copy(file1, _destination);
+            var result = Core.Helpers.Io.Copy(file1, _destination);
 
             // Assert
             StringAssert.StartsWith("Could not find file", result.Message);

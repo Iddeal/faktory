@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Faktory.Logging
+namespace Faktory.Core.Logging
 {
     internal class Logger
     {

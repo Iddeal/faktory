@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace Faktory.InternalUtilities
+namespace Faktory.Core.InternalUtilities
 {
     public static class FileUsage
     {

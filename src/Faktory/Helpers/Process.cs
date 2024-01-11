@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace Faktory.Helpers;
+namespace Faktory.Core.Helpers;
 
 public static class Process
 {

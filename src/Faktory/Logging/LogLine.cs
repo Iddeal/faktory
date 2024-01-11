@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Faktory.Logging;
+namespace Faktory.Core.Logging;
 
 public class LogLine
 {

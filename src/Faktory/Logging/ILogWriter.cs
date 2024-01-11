@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Spectre.Console;
 
-namespace Faktory.Logging;
+namespace Faktory.Core.Logging;
 
 public interface ILogWriter
 {

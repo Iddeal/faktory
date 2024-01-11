@@ -1,9 +1,9 @@
-﻿using Faktory.InternalUtilities;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System;
+using Faktory.Core.InternalUtilities;
 
-namespace Faktory.Helpers;
+namespace Faktory.Core.Helpers;
 
  public static partial class Io
     {

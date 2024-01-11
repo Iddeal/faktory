@@ -1,7 +1,7 @@
 ﻿using System;
-using Faktory.Logging;
+using Faktory.Core.Logging;
 
-namespace Faktory;
+namespace Faktory.Core;
 
 public static class FaktoryRunner
 {

@@ -1,10 +1,10 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Faktory.InternalUtilities;
+using Faktory.Core.InternalUtilities;
 using NUnit.Framework;
 
-namespace Faktory.Tests
+namespace Faktory.Tests.Integration.InternalUtilities
 {
     [TestFixture]
     [NonParallelizable]

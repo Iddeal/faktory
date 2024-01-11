@@ -76,6 +76,7 @@
     <Compile Include="Integration\Helpers\Io\CopyTests.cs" />
     <Compile Include="Integration\Helpers\Io\DeleteTests.cs" />
     <Compile Include="Integration\Helpers\ProcessTests.cs" />
+    <Compile Include="Integration\Helpers\Process\ProcessTests.cs" />
     <Compile Include="OptionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHelpers.cs" />
@@ -85,7 +86,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Faktory\Faktory.csproj">
+    <ProjectReference Include="..\Faktory\Faktory.Core.csproj">
       <Project>{4cb73894-ed3c-42dc-900e-9561f123d9af}</Project>
       <Name>Faktory</Name>
     </ProjectReference>

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Faktory
+namespace Faktory.Core
 {
     public struct ActionResult
     {

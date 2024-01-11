@@ -1,4 +1,4 @@
-﻿namespace Faktory
+﻿namespace Faktory.Core
 {
     public enum Status
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Faktory.Exceptions
+namespace Faktory.Core.Exceptions
 {
     public class MissingFaktoryException : Exception
     {

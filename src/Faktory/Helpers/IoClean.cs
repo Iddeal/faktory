@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
-using Faktory.InternalUtilities;
+using Faktory.Core.InternalUtilities;
 
-namespace Faktory.Helpers
+namespace Faktory.Core.Helpers
 {
     /// <summary>
     /// Set of helpers for working with Disk operations.

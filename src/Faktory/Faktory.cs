@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Faktory.Logging;
+using Faktory.Core.Logging;
 
-namespace Faktory
+namespace Faktory.Core
 {
     public class Faktory
     {

@@ -1,8 +1,9 @@
-﻿using NUnit.Framework;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
+using Faktory.Core;
+using NUnit.Framework;
 
-namespace Faktory.Tests.Integration.Helpers
+namespace Faktory.Tests.Integration.Helpers.Io
 {
     [TestFixture]
     [NonParallelizable]
@@ -19,7 +20,7 @@ namespace Faktory.Tests.Integration.Helpers
             var file = TestHelpers.Disk.CreateFile(BasePath, "fileToDelete.txt");
 
             // Act - Delete the file
-            var result = global::Faktory.Helpers.Io.DeleteFile(file);
+            var result = Core.Helpers.Io.DeleteFile(file);
 
             // Assert
             Assert.IsEmpty(result.Message);
@@ -38,7 +39,7 @@ namespace Faktory.Tests.Integration.Helpers
             Task.Run(() => TestHelpers.Disk.LockFile(filePath, 3));
 
             // Act - Delete the file
-            var result = global::Faktory.Helpers.Io.DeleteFile(filePath);
+            var result = Core.Helpers.Io.DeleteFile(filePath);
 
             // Assert
             Assert.AreEqual(Status.Error, result.Status);
@@ -53,7 +54,7 @@ namespace Faktory.Tests.Integration.Helpers
             var files = TestHelpers.Disk.CreateFiles(5, BasePath);
 
             // Act - Delete the files
-            var result = global::Faktory.Helpers.Io.DeleteFiles(files);
+            var result = Core.Helpers.Io.DeleteFiles(files);
 
             // Assert
             Assert.IsEmpty(result.Message);
@@ -72,7 +73,7 @@ namespace Faktory.Tests.Integration.Helpers
             var directory = TestHelpers.Disk.CreateFolder(Path.Combine(BasePath, "DeleteDirTestFolder"));
 
             // Act - Delete the directory
-            var result = global::Faktory.Helpers.Io.DeleteDirectory(directory);
+            var result = Core.Helpers.Io.DeleteDirectory(directory);
 
             // Assert
             Assert.IsEmpty(result.Message);
@@ -89,7 +90,7 @@ namespace Faktory.Tests.Integration.Helpers
             var files = TestHelpers.Disk.CreateFolderWithFiles(directory, 4);
 
             // Act - Delete the directory
-            var result = global::Faktory.Helpers.Io.DeleteDirectory(directory);
+            var result = Core.Helpers.Io.DeleteDirectory(directory);
 
             // Assert
             Assert.IsEmpty(result.Message);

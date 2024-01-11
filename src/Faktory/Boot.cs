@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using Faktory.Logging;
+using Faktory.Core.Logging;
 
-namespace Faktory
+namespace Faktory.Core
 {
     internal static class Boot
     {

@@ -1,6 +1,6 @@
-﻿using Faktory.Logging;
+﻿using Faktory.Core.Logging;
 
-namespace Faktory.Extensions;
+namespace Faktory.Core.Extensions;
 
 public static class SpectreExtensions
 {

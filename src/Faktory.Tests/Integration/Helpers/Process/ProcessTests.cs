@@ -1,8 +1,7 @@
-﻿using System.IO;
+﻿using Faktory.Core;
 using NUnit.Framework;
-using Faktory.Helpers;
 
-namespace Faktory.Tests.Integration.Helpers
+namespace Faktory.Tests.Integration.Helpers.Process
 {
     [TestFixture]
     [NonParallelizable]
@@ -13,7 +12,7 @@ namespace Faktory.Tests.Integration.Helpers
         public void Run_TestAppWithNoArguments_ReturnsSuccess()
         {
             // Act - Run the test app
-            var result = Process.Run("ProcessTest.exe");
+            var result = Core.Helpers.Process.Run("ProcessTest.exe");
 
             // Assert
             Assert.IsEmpty(result.Message);
@@ -25,7 +24,7 @@ namespace Faktory.Tests.Integration.Helpers
         public void Run_TestAppWithPlannedFailed_ReturnsFailure()
         {
             // Act - Run the test app
-            var result = Process.Run("ProcessTest.exe", "42");
+            var result = Core.Helpers.Process.Run("ProcessTest.exe", "42");
 
             // Assert
             Assert.AreEqual(42, result.ExitCode);

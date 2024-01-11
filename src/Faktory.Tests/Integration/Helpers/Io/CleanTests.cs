@@ -1,8 +1,9 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
+using Faktory.Core;
 using NUnit.Framework;
 
-namespace Faktory.Tests.Integration.Helpers
+namespace Faktory.Tests.Integration.Helpers.Io
 {
     [TestFixture]
     [NonParallelizable]
@@ -19,7 +20,7 @@ namespace Faktory.Tests.Integration.Helpers
             TestHelpers.Disk.CreateFoldersWithFiles(BasePath, 5);
 
             // Act - Clean the path
-            var result = global::Faktory.Helpers.Io.CleanDirectory(BasePath);
+            var result = Core.Helpers.Io.CleanDirectory(BasePath);
 
             // Assert
             Assert.IsEmpty(result.Message);
@@ -41,7 +42,7 @@ namespace Faktory.Tests.Integration.Helpers
             Task.Run(() => TestHelpers.Disk.LockFile(filePath, 3));
 
             // Act - Clean the path
-            var result = global::Faktory.Helpers.Io.CleanDirectory(BasePath);
+            var result = Core.Helpers.Io.CleanDirectory(BasePath);
 
             // Assert
             Assert.AreEqual(Status.Error, result.Status);

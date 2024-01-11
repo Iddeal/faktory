@@ -1,4 +1,4 @@
-﻿namespace Faktory.Logging
+﻿namespace Faktory.Core.Logging
 {
     public enum LogType
     {

@@ -2,9 +2,9 @@
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
-using Faktory.Logging;
+using Faktory.Core.Logging;
 
-namespace Faktory.Helpers;
+namespace Faktory.Core.Helpers;
 
 /// <summary>
 /// Set of helpers for working with Disk operations.

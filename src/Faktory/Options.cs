@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Faktory.Logging;
 
-namespace Faktory
+namespace Faktory.Core
 {
     public class Options : IEnumerable<KeyValuePair<string, string>>
     {
