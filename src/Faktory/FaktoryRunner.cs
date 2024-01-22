@@ -19,7 +19,6 @@ public static class FaktoryRunner
     public static bool Run(Faktory faktory)
     {
         LogWriter ??= new SpectreLogWriter();
-
         faktory.RunBuild();
         if (faktory.Executed == false)
         {

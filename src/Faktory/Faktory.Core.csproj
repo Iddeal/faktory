@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="ActionResult.cs" />
     <Compile Include="Boot.cs" />
+    <Compile Include="Config.cs" />
     <Compile Include="Extensions\SpectreExtensions.cs" />
     <Compile Include="FaktoryRunner.cs" />
     <Compile Include="Helpers\IoClean.cs" />

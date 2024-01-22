@@ -24,7 +24,7 @@ namespace Faktory.Tests
             var faktory = new TestFaktoryWithOutOverridingRunBuild();
             FaktoryRunner.Run(faktory);
 
-            CollectionAssert.Contains(LogWriter.AllMessages, "Please override the Build() method.");
+            CollectionAssert.Contains(LogWriter.AllMessages, "Please override the RunBuild() method.");
         }
 
         [Test]
@@ -100,6 +100,29 @@ namespace Faktory.Tests
             Assert.That("Exception of type 'System.Exception' was thrown.", Is.Not.Null.And.Matches(new ContainsTrimmed(LogWriter.AllMessages)));
             Assert.That("Second task ran!", Is.Not.Null.And.Not.Matches(new ContainsTrimmed(LogWriter.AllMessages)));
         }
+
+        // Config Tests
+        [Test]
+        public void WithOutOverridingConfigure_UsesDefault()
+        {
+            FaktoryRunner.BootUp("", UpdateStatus);
+            var faktory = new TestFaktoryWithNoConfig();
+            faktory.SetStatusUpdater(UpdateStatus);
+            FaktoryRunner.Run(faktory);
+
+            CollectionAssert.Contains(LogWriter.AllMessages, "Loading with default config.");
+        }
+
+        [Test]
+        public void WithOverridingConfigure_Succeeds()
+        {
+            FaktoryRunner.BootUp("", UpdateStatus);
+            var faktory = new TestFaktoryWithConfig();
+            faktory.SetStatusUpdater(UpdateStatus);
+            FaktoryRunner.Run(faktory);
+
+            Assert.AreEqual("ABC_123", faktory.GetConfig("MyKey"));
+        }
     }
 
     public class TestFaktoryWithOutOverridingRunBuild : Core.Faktory { }
@@ -130,5 +153,23 @@ namespace Faktory.Tests
                 .Then(() => Log("Second task ran!"))
                 .Execute();
         }
+    }
+
+    // CONFIG Tests
+    public class TestFaktoryWithNoConfig : Core.Faktory
+    {
+        protected override void RunBuild() { Execute(); }
+    }
+
+    public class TestFaktoryWithConfig : Core.Faktory
+    {
+        protected override Config Configure()
+        {
+            return new Config
+            {
+                ["MyKey"] = "ABC_123"
+            };
+        }
+        protected override void RunBuild() { Execute(); }
     }
 }
