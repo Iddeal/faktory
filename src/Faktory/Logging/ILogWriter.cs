@@ -6,6 +6,7 @@ namespace Faktory.Core.Logging;
 
 public interface ILogWriter
 {
+    void Write(LogLine line);
     void Write(List<LogLine> lines);
 }
 
@@ -18,10 +19,15 @@ public class ConsoleLogWriter : ILogWriter
     {
         foreach (var line in lines)
         {
-            var linedFeed = line.LineFeed ? Environment.NewLine : "";
-            var message = $"{line.Text}{linedFeed}";
-            Console.Write(message);
+            Write(line);
         }
+    }
+
+    public void Write(LogLine line)
+    {
+        var linedFeed = line.LineFeed ? Environment.NewLine : "";
+        var message = $"{line.Text}{linedFeed}";
+        Console.Write(message);
     }
 }
 
@@ -54,6 +60,11 @@ public class TestLogWriter : ILogWriter
                 parsedLine += content;
             }
         }
+    }
+
+    public void Write(LogLine line)
+    {
+        throw new NotImplementedException();
     }
 }
 
@@ -94,5 +105,11 @@ public class SpectreLogWriter : ILogWriter
                 parsedLine += content;
             }
         }
+    }
+
+    public void Write(LogLine line)
+    {
+        var content = $"[{_colorMap[line.Color]}]{line.Text.EscapeMarkup()}[/]";
+        AnsiConsole.MarkupLine(content);
     }
 }

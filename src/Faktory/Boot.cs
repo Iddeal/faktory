@@ -18,6 +18,7 @@ namespace Faktory.Core
         public static bool Up(string args, Action<string> updateStatus)
         {
             Logger = new Logger();
+            Logger.Writer = new SpectreLogWriter();
             return With(updateStatus, args, CaptureOptions, DisplayOptions);
         }
 

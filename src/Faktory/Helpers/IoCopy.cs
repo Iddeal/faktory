@@ -91,9 +91,6 @@ public static partial class Io
             if (string.IsNullOrEmpty(errorHasOccurred) && process.ExitCode < 8) return;
 
             // An error occurred
-            var writer = new TestLogWriter();
-            Boot.Logger.Write(writer);
-
             var error = string.IsNullOrEmpty(errorHasOccurred)
                 ? $"Robocopy exited with code {process.ExitCode}"
                 : $"Robocopy {errorHasOccurred}";

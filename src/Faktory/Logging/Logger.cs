@@ -7,6 +7,7 @@ namespace Faktory.Core.Logging
     {
         readonly List<LogLine> _logLines = new();
         public int IndentLevel { get; set; }
+        public ILogWriter Writer { get; set; }
 
         public void Error(Exception exception, bool lineFeed = true) => Error(exception.Message, exception, lineFeed);
         public void Error(string message, Exception exception = null, bool lineFeed = true) => InternalWrite(message, lineFeed, LogType.Error, LogColor.Red, exception);
@@ -38,6 +39,7 @@ namespace Faktory.Core.Logging
                 Exception = e
             };
             _logLines.Add(logLine);
+            Writer?.Write(logLine);
         }
     }
 }
