@@ -30,8 +30,8 @@ public static class Process
             process.StartInfo.CreateNoWindow = true;
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 
+            Boot.Logger.Info($"Running '{command} {arguments}'...");
             process.Start();
-            process.WaitForExit();
 
             //Capture the output to the log
             while (process.StandardOutput.EndOfStream == false)
@@ -52,6 +52,8 @@ public static class Process
                 Boot.Logger.Error(dataLine);
                 standardError.Add(dataLine);
             }
+            
+            process.WaitForExit();
 
             if (process.ExitCode != 0) throw new Exception($"Process exited with code {process.ExitCode}");
         }
