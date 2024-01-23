@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{301B9114-BBAF-4F21-A89D-06FEB3952F0B}</ProjectGuid>
+    <ProjectGuid>{1AEFF54A-48A4-4A07-9EFF-288202B91DD2}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>ProcessTest</RootNamespace>
-    <AssemblyName>ProcessTest</AssemblyName>
+    <RootNamespace>Faktory.Sample</RootNamespace>
+    <AssemblyName>Faktory.Sample</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -15,7 +15,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\Faktory.Tests\bin\x64\Debug\</OutputPath>
+    <OutputPath>bin\x64\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -51,7 +51,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="README.txt" />
+    <ProjectReference Include="..\Faktory\Faktory.Core.csproj">
+      <Project>{4cb73894-ed3c-42dc-900e-9561f123d9af}</Project>
+      <Name>Faktory.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

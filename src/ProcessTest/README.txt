@@ -1,0 +1,2 @@
+﻿This project is used for integration tests in the Faktory.Tests project.
+It is a simple console application that can be run from the command line and exits with the code specified in the command line arguments.
