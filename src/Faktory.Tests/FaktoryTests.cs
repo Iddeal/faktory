@@ -121,7 +121,7 @@ namespace Faktory.Tests
             faktory.SetStatusUpdater(UpdateStatus);
             FaktoryRunner.Run(faktory);
 
-            Assert.AreEqual("ABC_123", faktory.GetConfig("MyKey"));
+            Assert.AreEqual("ABC_123", Config.Get("MyKey"));
         }
     }
 
@@ -163,13 +163,11 @@ namespace Faktory.Tests
 
     public class TestFaktoryWithConfig : Core.Faktory
     {
-        protected override Config Configure()
+        protected override void Configure()
         {
-            return new Config
-            {
-                ["MyKey"] = "ABC_123"
-            };
+            Config.Set("MyKey", "ABC_123");
         }
+
         protected override void RunBuild() { Execute(); }
     }
 }

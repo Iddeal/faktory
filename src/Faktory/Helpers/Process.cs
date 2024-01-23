@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Faktory.Core.Helpers;
@@ -14,6 +15,8 @@ public static class Process
     /// <returns></returns>
     public static ProcessStepResult Run(string command, string arguments = "", string workingDirectory = null)
     {
+        var standardOut = new List<string>();
+        var standardError = new List<string>();
         try
         {
             var process = new System.Diagnostics.Process();
@@ -38,6 +41,7 @@ public static class Process
                 if (dataLine == null) continue;
 
                 Boot.Logger.Info(dataLine);
+                standardOut.Add(dataLine);
             }
 
             //Capture the errors to the log
@@ -47,16 +51,17 @@ public static class Process
                 if (dataLine == null) continue;
 
                 Boot.Logger.Error(dataLine);
+                standardError.Add(dataLine);
             }
 
             return process.ExitCode != 0
-                ? new ProcessStepResult(Status.Error, string.Empty, process.ExitCode)
-                : new ProcessStepResult(Status.Ok, string.Empty, process.ExitCode);
+                ? new ProcessStepResult(Status.Error, string.Empty, standardOut, standardError, process.ExitCode)
+                : new ProcessStepResult(Status.Ok, string.Empty, standardOut, standardError, process.ExitCode);
         }
         catch (Exception e)
         {
             Boot.Logger.Error($"Error running `{command}`: {e.Message}");
-            return new ProcessStepResult(Status.Error, e.Message);
+            return new ProcessStepResult(Status.Error, e.Message, standardOut, standardError);
         }
     }
 }

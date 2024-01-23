@@ -7,14 +7,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsBuildTest", "MsBuildTest.
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4CAD7ECA-7E3C-460B-927F-46DD562528B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4CAD7ECA-7E3C-460B-927F-46DD562528B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4CAD7ECA-7E3C-460B-927F-46DD562528B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4CAD7ECA-7E3C-460B-927F-46DD562528B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69F4681A-884B-417D-8B80-4912B66E53AF}.Debug|x64.ActiveCfg = Debug|x64
+		{69F4681A-884B-417D-8B80-4912B66E53AF}.Debug|x64.Build.0 = Debug|x64
+		{69F4681A-884B-417D-8B80-4912B66E53AF}.Release|x64.ActiveCfg = Release|x64
+		{69F4681A-884B-417D-8B80-4912B66E53AF}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -9,6 +9,18 @@ namespace Faktory.Tests.Integration.Helpers.Process
     public class ProcessTests
     {
         [Test, Order(1)]
+        public void Run_NotFoundApp_ReturnsFailure()
+        {
+            // Act 
+            var result = Core.Helpers.Process.Run("nada_i_dont_exist.exe");
+
+            // Assert
+            Assert.AreEqual(Status.Error, result.Status);
+            Assert.AreEqual("The system cannot find the file specified", result.Message);
+            Assert.IsNull(result.ExitCode);
+        }
+
+        [Test, Order(2)]
         public void Run_TestAppWithNoArguments_ReturnsSuccess()
         {
             // Act - Run the test app
@@ -20,7 +32,7 @@ namespace Faktory.Tests.Integration.Helpers.Process
             Assert.AreEqual(Status.Ok, result.Status);
         }
 
-        [Test, Order(2)]
+        [Test, Order(3)]
         public void Run_TestAppWithPlannedFailed_ReturnsFailure()
         {
             // Act - Run the test app

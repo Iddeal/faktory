@@ -2,13 +2,14 @@
 
 namespace Faktory.Core;
 
-public class Config
+public static class Config
 {
-    readonly Dictionary<string, string> _configurations = new();
+    static Dictionary<string, string> _configurations = new();
+    public static string Get(string key) => _configurations[key];
+    public static string Set(string key, string value) => _configurations[key] = value;
 
-    public string this[string key]
+    public static void Reset()
     {
-        get => _configurations[key];
-        set => _configurations[key] = value;
+        _configurations = new();
     }
 }

@@ -10,11 +10,11 @@ namespace Faktory.Core
     {
         bool _missingRequiredOptions;
         Action<string> _updateStatus;
-        Config _config;
         List<Action> BuildActions { get; } = new();
 
         public List<ActionResult> ActionResults { get; } = new();
         public List<string> RequiredOptions { get; } = new();
+        public Options Options => Boot.Options;
 
         /// <summary>
         /// Returns the path where the Faktory is running from.
@@ -22,25 +22,15 @@ namespace Faktory.Core
         public static string SourcePath => Boot.SourcePath;
         public bool Executed { get; private set; }
 
-        protected virtual Config Configure() {
+        protected virtual void Configure() {
             Boot.Logger.Error("Loading with default config.");
-            return new Config();
         }
 
         protected internal virtual void RunBuild() {
             Boot.Logger.Error("Please override the RunBuild() method.");
         }
 
-        public string GetConfig(string key)
-        {
-            if (_config == null)
-            {
-                Boot.Logger.Error("Configure must be called before GetConfig.");
-                throw new NullReferenceException("Config['{key}']");
-            }
-
-            return _config[key];
-        }
+        
 
         /// <summary>
         /// Output a line to the final log.
@@ -62,7 +52,7 @@ namespace Faktory.Core
         public void Execute()
         {
             // Load the custom Config
-            _config = Configure();
+            Configure();
 
             Executed = true;
             if (_missingRequiredOptions) return;

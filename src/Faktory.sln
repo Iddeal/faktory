@@ -8,10 +8,19 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Faktory.Sample", "Faktory.Sample\Faktory.Sample.csproj", "{1AEFF54A-48A4-4A07-9EFF-288202B91DD2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Faktory.Tests", "Faktory.Tests\Faktory.Tests.csproj", "{66166D38-9413-40A3-84D1-3E0D6F0367F3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{301B9114-BBAF-4F21-A89D-06FEB3952F0B} = {301B9114-BBAF-4F21-A89D-06FEB3952F0B}
+		{69F4681A-884B-417D-8B80-4912B66E53AF} = {69F4681A-884B-417D-8B80-4912B66E53AF}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessTest", "ProcessTest\ProcessTest.csproj", "{301B9114-BBAF-4F21-A89D-06FEB3952F0B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsBuildTest", "MsBuildTest\MsBuildTest.csproj", "{69F4681A-884B-417D-8B80-4912B66E53AF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{22A2D66B-E4AC-4CF1-85F4-2BAC917FFB23}"
+	ProjectSection(SolutionItems) = preProject
+		WORK LOG.txt = WORK LOG.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +41,8 @@ Global
 		{301B9114-BBAF-4F21-A89D-06FEB3952F0B}.Debug|x64.ActiveCfg = Debug|x64
 		{301B9114-BBAF-4F21-A89D-06FEB3952F0B}.Debug|x64.Build.0 = Debug|x64
 		{301B9114-BBAF-4F21-A89D-06FEB3952F0B}.Release|x64.ActiveCfg = Release|x64
+		{69F4681A-884B-417D-8B80-4912B66E53AF}.Debug|x64.ActiveCfg = Debug|x64
+		{69F4681A-884B-417D-8B80-4912B66E53AF}.Release|x64.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

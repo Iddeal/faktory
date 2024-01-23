@@ -1,4 +1,6 @@
-﻿namespace Faktory.Core
+﻿using System.Collections.Generic;
+
+namespace Faktory.Core
 {
     public enum Status
     {
@@ -23,10 +25,14 @@
 
     public class ProcessStepResult : BuildStepResult
     {
+        public List<string> StandardOut { get; }
+        public List<string> StandardError { get; }
         public int? ExitCode { get; private set; }
 
-        public ProcessStepResult(Status status, string message, int? exitCode = null) : base(status, message)
+        public ProcessStepResult(Status status, string message, List<string> standardOut = null, List<string> standardError = null, int? exitCode = null) : base(status, message)
         {
+            StandardOut = standardOut;
+            StandardError = standardError;
             ExitCode = exitCode;
         }
     }
