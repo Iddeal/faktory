@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Faktory.Core;
 using NUnit.Framework;
@@ -20,11 +21,9 @@ namespace Faktory.Tests.Integration.Helpers.Io
             TestHelpers.Disk.CreateFoldersWithFiles(BasePath, 5);
 
             // Act - Clean the path
-            var result = Core.Helpers.Io.CleanDirectory(BasePath);
+            Assert.DoesNotThrow(() => Core.Helpers.Io.CleanDirectory(BasePath));
 
             // Assert
-            Assert.IsEmpty(result.Message);
-            Assert.AreEqual(Status.Ok, result.Status);
             Assert.IsTrue(Directory.Exists(BasePath));
             Assert.IsEmpty(Directory.GetDirectories(BasePath));
             Assert.IsEmpty(Directory.GetFiles(BasePath));
@@ -42,11 +41,10 @@ namespace Faktory.Tests.Integration.Helpers.Io
             Task.Run(() => TestHelpers.Disk.LockFile(filePath, 3));
 
             // Act - Clean the path
-            var result = Core.Helpers.Io.CleanDirectory(BasePath);
+            var exception = Assert.Throws<Exception>(() => Core.Helpers.Io.CleanDirectory(BasePath));
 
             // Assert
-            Assert.AreEqual(Status.Error, result.Status);
-            Assert.That(result.Message.StartsWith($"Can't delete `{filePath}`. It's locked by "));
+            StringAssert.Contains($"Can't delete `{filePath}`. It's locked by ", exception.Message);
         }
     }
 }

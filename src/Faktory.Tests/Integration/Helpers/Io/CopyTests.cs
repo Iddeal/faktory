@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using Faktory.Core;
@@ -38,11 +39,9 @@ namespace Faktory.Tests.Integration.Helpers.Io
             var copiedFile1 = Path.Combine(_destination, fileName);
 
             // Act - Copy the file
-            var result = Core.Helpers.Io.Copy(file1, _destination);
+            Assert.DoesNotThrow(() => Core.Helpers.Io.Copy(file1, _destination));
 
             // Assert
-            Assert.IsEmpty(result.Message);
-            Assert.AreEqual(Status.Ok, result.Status);
             Assert.IsTrue(File.Exists(copiedFile1));
         }
 
@@ -60,11 +59,9 @@ namespace Faktory.Tests.Integration.Helpers.Io
             var copiedFile1 = Path.Combine(notRealDestination, fileName);
 
             // Act - Copy the file1 to non-existent directory
-            var result = Core.Helpers.Io.Copy(file1, notRealDestination);
+            Assert.DoesNotThrow(() => Core.Helpers.Io.Copy(file1, notRealDestination));
 
             // Assert
-            Assert.IsEmpty(result.Message);
-            Assert.AreEqual(Status.Ok, result.Status);
             Assert.True(Directory.Exists(notRealDestination));
             Assert.IsTrue(File.Exists(copiedFile1));
         }
@@ -79,11 +76,9 @@ namespace Faktory.Tests.Integration.Helpers.Io
             var files = TestHelpers.Disk.CreateFiles(25, BasePath).ToArray();
 
             // Act - Copy the files
-            var result = Core.Helpers.Io.Copy(_destination, files);
+            Assert.DoesNotThrow(() => Core.Helpers.Io.Copy(_destination, files));
 
             // Assert
-            Assert.IsEmpty(result.Message);
-            Assert.AreEqual(Status.Ok, result.Status);
             Assert.IsTrue(Directory.GetFiles(_destination).Length == 25);
         }
 
@@ -116,11 +111,9 @@ namespace Faktory.Tests.Integration.Helpers.Io
             files.ToList().ForEach(x => TestHelpers.Disk.CreateFile(x.Path, x.FileName));
 
             // Act - Copy the files
-            var result = Core.Helpers.Io.Copy(BasePath, _destination, "*.dll *.exe *.exe.config CefSharp.* *.pak *.dat *.bin", "/S /XF Destination *.vshost* *.xml *.pdb");
+            Assert.DoesNotThrow(() => Core.Helpers.Io.Copy(BasePath, _destination, "*.dll *.exe *.exe.config CefSharp.* *.pak *.dat *.bin", "/S /XF Destination *.vshost* *.xml *.pdb"));
 
             // Assert
-            Assert.IsEmpty(result.Message);
-            Assert.AreEqual(Status.Ok, result.Status);
             foreach (var file in files)
             {
                 var destinationFile = file.Path == BasePath
@@ -141,11 +134,10 @@ namespace Faktory.Tests.Integration.Helpers.Io
         public void Copy_RobocopyWithInvalidParameters_ShouldFail()
         {
             // Act - Copy the files
-            var result = Core.Helpers.Io.Copy(BasePath, _destination, "*.*", "/I_am_an_invalid_parameter");
+            var exception = Assert.Throws<Exception>(() => Core.Helpers.Io.Copy(BasePath, _destination, "*.*", "/I_am_an_invalid_parameter"));
 
             // Assert
-            Assert.AreEqual(Status.Error, result.Status);
-            StringAssert.StartsWith("Robocopy ERROR : Invalid Parameter", result.Message);
+            StringAssert.Contains("Robocopy ERROR : Invalid Parameter", exception.Message);
             Assert.IsEmpty(Directory.GetFiles(_destination));
         }
 
@@ -156,11 +148,10 @@ namespace Faktory.Tests.Integration.Helpers.Io
             var randomFolderName = Path.GetRandomFileName();
 
             // Act - Copy the files
-            var result = Core.Helpers.Io.Copy(Path.Combine(BasePath, randomFolderName), _destination, "*.*", "");
+            var exception = Assert.Throws<Exception>(() => Core.Helpers.Io.Copy(Path.Combine(BasePath, randomFolderName), _destination, "*.*", ""));
 
             // Assert
-            Assert.AreEqual(Status.Error, result.Status);
-            StringAssert.StartsWith("Robocopy ERROR 2: Accessing Source Directory", result.Message);
+            StringAssert.Contains("Robocopy ERROR 2: Accessing Source Directory", exception.Message);
             Assert.IsEmpty(Directory.GetFiles(_destination));
         }
 
@@ -172,10 +163,10 @@ namespace Faktory.Tests.Integration.Helpers.Io
             
             // Act - Copy the non-existent file
             var file1 = Path.Combine(BasePath, "i_dont_exist.txt");
-            var result = Core.Helpers.Io.Copy(file1, _destination);
+            var exception = Assert.Throws<Exception>(() => Core.Helpers.Io.Copy(file1, _destination));
 
             // Assert
-            StringAssert.StartsWith("Could not find file", result.Message);
+            StringAssert.Contains("Could not find file", exception.Message);
             Assert.IsFalse(File.Exists(file1));
         }
     }

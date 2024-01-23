@@ -34,10 +34,6 @@ namespace Faktory.Core
                     PrintSummary(faktory);
                 }
             });
-
-#if DEBUG
-            Console.ReadLine();
-#endif
         }
 
         static void PrintHeader() => AnsiConsole.MarkupLine($"{AppName.Colorify(LogColor.Yellow)} {Version.Colorify(LogColor.Green)}");

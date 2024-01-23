@@ -14,7 +14,7 @@ namespace Faktory.Core.Helpers
         /// </summary>
         /// <param name="path">Directory to be cleaned.</param>
         /// <returns></returns>
-        public static BuildStepResult CleanDirectory(string path)
+        public static void CleanDirectory(string path)
         {
             try
             {
@@ -36,13 +36,10 @@ namespace Faktory.Core.Helpers
                     CleanDirectory(directory);
                     Directory.Delete(directory);
                 }
-
-                return new BuildStepResult(Status.Ok, string.Empty);
             }
             catch (Exception e)
             {
-                Boot.Logger.Error($"Error cleaning `{path}`: {e.Message}");
-                return new BuildStepResult(Status.Error, e.Message);
+                throw new Exception($"Error cleaning `{path}`: {e.Message}");
             }
         }
     }

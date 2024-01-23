@@ -12,7 +12,7 @@ namespace Faktory.Core.Helpers;
         /// </summary>
         /// <param name="file">Full path to file being deleted.</param>
         /// <returns></returns>
-        public static BuildStepResult DeleteFile(string file)
+        public static void DeleteFile(string file)
         {
             try
             {
@@ -23,13 +23,10 @@ namespace Faktory.Core.Helpers;
                 }
                 Boot.Logger.Info($"Deleting file: `{file}`");
                 File.Delete(file);
-
-                return new BuildStepResult(Status.Ok, string.Empty);
             }
             catch (Exception e)
             {
-                Boot.Logger.Error($"Error deleting `{file}`: {e.Message}");
-                return new BuildStepResult(Status.Error, e.Message);
+                throw new Exception($"Error deleting `{file}`: {e.Message}");
             }
         }
 
@@ -38,17 +35,12 @@ namespace Faktory.Core.Helpers;
         /// </summary>
         /// <param name="files">List of files to delete.</param>
         /// <returns></returns>
-        public static BuildStepResult DeleteFiles(IEnumerable<string> files)
+        public static void DeleteFiles(IEnumerable<string> files)
         {
             foreach (var file in files)
             {
-                var result = DeleteFile(file);
-                if (result.Status == Status.Error)
-                {
-                    return result;
-                }
+                DeleteFile(file);
             }
-            return new BuildStepResult(Status.Ok, string.Empty);
         }
 
         /// <summary>
@@ -56,18 +48,16 @@ namespace Faktory.Core.Helpers;
         /// </summary>
         /// <param name="directory">The directory to delete.</param>
         /// <returns></returns>
-        public static BuildStepResult DeleteDirectory(string directory)
+        public static void DeleteDirectory(string directory)
         {
             try
             {
                 Boot.Logger.Info($"Deleting directory: `{directory}`");
                 Directory.Delete(directory, true);
-                return new BuildStepResult(Status.Ok, string.Empty);
             }
             catch (Exception e)
             {
-                Boot.Logger.Error($"Error deleting `{directory}`: {e.Message}");
-                return new BuildStepResult(Status.Error, e.Message);
+                throw new Exception($"Error deleting `{directory}`: {e.Message}");
             }
         }
     }

@@ -9,36 +9,29 @@ namespace Faktory.Core.Helpers;
 public static class MsBuild
 {
     public static string MsBuildPath => Config.Get("MSBuildPath");
-    public static ProcessStepResult Clean(string solutionPath, string configuration = "Debug", string platform = "x64")
+    public static void Clean(string solutionPath, string configuration = "Debug", string platform = "x64")
     {
-        return Run(solutionPath, configuration, platform, "Clean");
+        Run(solutionPath, configuration, platform, "Clean");
     }
 
-    public static ProcessStepResult Run(string solutionPath, string configuration = "Debug", string platform = "x64", string target = "Build", string args = null)
+    public static void Run(string solutionPath, string configuration = "Debug", string platform = "x64", string target = "Build", string args = null)
+    {
+        ExecuteMsBuild(solutionPath, configuration, platform, target, args);
+    }
+
+    static void ExecuteMsBuild(string solutionPath, string configuration, string platform, string target, string args)
     {
         if (MsBuildExists() == false)
         {
-            return new ProcessStepResult(Status.Error, $"Config option 'MSBuildPath' not set. Please override Configure().");
+            throw new Exception($"Config option 'MSBuildPath' not set. Please override Configure().");
         }
 
         if (File.Exists(solutionPath) == false)
         {
-            return new ProcessStepResult(Status.Error, $"Could not find '{solutionPath}'");
+            throw new Exception($"Could not find '{solutionPath}'");
         }
 
-        return ExecuteMsBuild(solutionPath, configuration, platform, target, args);
-    }
-
-    static ProcessStepResult ExecuteMsBuild(string solutionPath, string configuration, string platform, string target, string args)
-    {
-        try
-        {
-            return Process.Run(MsBuildPath, GetArguments(solutionPath, configuration, platform, target, args));
-        }
-        catch (Exception e)
-        {
-            return new ProcessStepResult(Status.Error, e.Message);
-        }
+        Process.Run(MsBuildPath, GetArguments(solutionPath, configuration, platform, target, args));
     }
 
     static string GetArguments(string solutionPath, string configuration, string platform, string target, string args)
@@ -53,8 +46,15 @@ public static class MsBuild
         if (string.IsNullOrEmpty(msBuildPath)) return false;
         if (File.Exists(msBuildPath) == false) return false;
 
-        var result = Process.Run(msBuildPath, "-version");
-        return result.ExitCode == 0;
+        try
+        {
+            Process.Run(msBuildPath, "-version");
+            return true;
+        }
+        catch 
+        {
+            return false;
+        }
+        
     }
-
 }

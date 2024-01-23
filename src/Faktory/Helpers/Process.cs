@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Faktory.Core.Exceptions;
 
 namespace Faktory.Core.Helpers;
 
@@ -13,7 +14,7 @@ public static class Process
     /// <param name="arguments">Optional arguments</param>
     /// <param name="workingDirectory">Defaults to script directory.</param>
     /// <returns></returns>
-    public static ProcessStepResult Run(string command, string arguments = "", string workingDirectory = null)
+    public static void Run(string command, string arguments = "", string workingDirectory = null)
     {
         var standardOut = new List<string>();
         var standardError = new List<string>();
@@ -28,8 +29,6 @@ public static class Process
             process.StartInfo.RedirectStandardError = true;
             process.StartInfo.CreateNoWindow = true;
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            process.Start();
-
 
             process.Start();
             process.WaitForExit();
@@ -54,14 +53,11 @@ public static class Process
                 standardError.Add(dataLine);
             }
 
-            return process.ExitCode != 0
-                ? new ProcessStepResult(Status.Error, string.Empty, standardOut, standardError, process.ExitCode)
-                : new ProcessStepResult(Status.Ok, string.Empty, standardOut, standardError, process.ExitCode);
+            if (process.ExitCode != 0) throw new Exception($"Process exited with code {process.ExitCode}");
         }
         catch (Exception e)
         {
-            Boot.Logger.Error($"Error running `{command}`: {e.Message}");
-            return new ProcessStepResult(Status.Error, e.Message, standardOut, standardError);
+            throw new Exception($"Error running `{command}`: {e.Message}");
         }
     }
 }

@@ -67,7 +67,7 @@ namespace Faktory.Core
                 {
                     Boot.Logger.Info($"{x.Method.Name}() -> ", LogColor.Green);
                     Boot.Logger.IndentLevel = 1;
-                    result.Duration = ExecuteAndTimeAction(x);
+                    result.Duration = ExecuteAndTimeAction(x);;
                     result.Success = true;
                 }
                 catch (Exception e)
@@ -88,7 +88,7 @@ namespace Faktory.Core
         {
             var sw = new Stopwatch();
             sw.Start();
-            x.Invoke();
+             x.Invoke();
             sw.Stop();
             return sw.Elapsed;
         }

@@ -19,7 +19,7 @@ public static partial class Io
     /// <param name="file">The file to copy.</param>
     /// <param name="destination">The directory to copy <paramref name="file" /> to.</param>
     /// <returns></returns>
-    public static BuildStepResult Copy(string file, string destination)
+    public static void Copy(string file, string destination)
     {
         try
         {
@@ -28,12 +28,10 @@ public static partial class Io
             var destinationFile = Path.Combine(destination, fileName);
             Boot.Logger.Info($"Copying `{fileName}` to `{destination}`");
             File.Copy(file, destinationFile, true);
-            return new BuildStepResult(Status.Ok, string.Empty);
         }
         catch (Exception e)
         {
-            Boot.Logger.Error($"Error copying `{file}`: {e.Message}");
-            return new BuildStepResult(Status.Error, e.Message);
+            throw new Exception($"Error copying `{file}`: {e.Message}");
         }
     }
 
@@ -45,17 +43,12 @@ public static partial class Io
     /// <param name="files">The file to copy.</param>
     /// <param name="destination">The directory to copy <paramref name="files" /> to.</param>
     /// <returns></returns>
-    public static BuildStepResult Copy(string destination, string[] files)
+    public static void Copy(string destination, string[] files)
     {
         foreach (var file in files)
         {
-            var result = Copy(file, destination);
-            if (result.Status == Status.Error)
-            {
-                return result;
-            }
+            Copy(file, destination);
         }
-        return new BuildStepResult(Status.Ok, string.Empty);
     }
 
     /// <summary>
@@ -67,7 +60,7 @@ public static partial class Io
     /// <param name="files">Specifies the file or files to be copied. Wildcard characters (* or ?) are supported. If you don't specify this parameter, *.* is used as the default value.</param>
     /// <param name="options">Specifies the options to use with the robocopy command, including copy, file, retry, logging, and job options.</param>
     /// <returns></returns>
-    public static BuildStepResult Copy(string source, string destination, string files, string options)
+    public static void Copy(string source, string destination, string files, string options)
     {
         try
         {
@@ -95,7 +88,7 @@ public static partial class Io
 
             process.WaitForExit();
 
-            if (string.IsNullOrEmpty(errorHasOccurred) && process.ExitCode < 8) return new BuildStepResult(Status.Ok, string.Empty);
+            if (string.IsNullOrEmpty(errorHasOccurred) && process.ExitCode < 8) return;
 
             // An error occurred
             var writer = new TestLogWriter();
@@ -104,12 +97,11 @@ public static partial class Io
             var error = string.IsNullOrEmpty(errorHasOccurred)
                 ? $"Robocopy exited with code {process.ExitCode}"
                 : $"Robocopy {errorHasOccurred}";
-            return new BuildStepResult(Status.Error, error);
+            throw new Exception(error);
         }
         catch (Exception e)
         {
-            Boot.Logger.Error($"Error calling robocopy: {e.Message}");
-            return new BuildStepResult(Status.Error, e.Message);
+            throw new Exception($"Error calling robocopy: {e.Message}");
         }
     }
 

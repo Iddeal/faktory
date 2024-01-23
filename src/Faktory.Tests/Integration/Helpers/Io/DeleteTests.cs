@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Faktory.Core;
 using NUnit.Framework;
@@ -20,11 +21,9 @@ namespace Faktory.Tests.Integration.Helpers.Io
             var file = TestHelpers.Disk.CreateFile(BasePath, "fileToDelete.txt");
 
             // Act - Delete the file
-            var result = Core.Helpers.Io.DeleteFile(file);
+            Assert.DoesNotThrow(() => Core.Helpers.Io.DeleteFile(file));
 
             // Assert
-            Assert.IsEmpty(result.Message);
-            Assert.AreEqual(Status.Ok, result.Status);
             Assert.IsFalse(File.Exists(file));
         }
 
@@ -39,11 +38,10 @@ namespace Faktory.Tests.Integration.Helpers.Io
             Task.Run(() => TestHelpers.Disk.LockFile(filePath, 3));
 
             // Act - Delete the file
-            var result = Core.Helpers.Io.DeleteFile(filePath);
+            var exception = Assert.Throws<Exception>(() => Core.Helpers.Io.DeleteFile(filePath));
 
             // Assert
-            Assert.AreEqual(Status.Error, result.Status);
-            Assert.That(result.Message.StartsWith($"Can't delete `{filePath}`. It's locked by "));
+            StringAssert.Contains($"Can't delete `{filePath}`. It's locked by ", exception.Message);
         }
 
         [Test, Order(3)]
@@ -54,11 +52,9 @@ namespace Faktory.Tests.Integration.Helpers.Io
             var files = TestHelpers.Disk.CreateFiles(5, BasePath);
 
             // Act - Delete the files
-            var result = Core.Helpers.Io.DeleteFiles(files);
+            Assert.DoesNotThrow(() => Core.Helpers.Io.DeleteFiles(files));
 
             // Assert
-            Assert.IsEmpty(result.Message);
-            Assert.AreEqual(Status.Ok, result.Status);
             foreach (var file in files)
             {
                 Assert.IsFalse(File.Exists(file));
@@ -73,11 +69,9 @@ namespace Faktory.Tests.Integration.Helpers.Io
             var directory = TestHelpers.Disk.CreateFolder(Path.Combine(BasePath, "DeleteDirTestFolder"));
 
             // Act - Delete the directory
-            var result = Core.Helpers.Io.DeleteDirectory(directory);
+            Assert.DoesNotThrow(() => Core.Helpers.Io.DeleteDirectory(directory));
 
             // Assert
-            Assert.IsEmpty(result.Message);
-            Assert.AreEqual(Status.Ok, result.Status);
             Assert.IsFalse(Directory.Exists(directory));
         }
 
@@ -90,11 +84,9 @@ namespace Faktory.Tests.Integration.Helpers.Io
             var files = TestHelpers.Disk.CreateFolderWithFiles(directory, 4);
 
             // Act - Delete the directory
-            var result = Core.Helpers.Io.DeleteDirectory(directory);
+            Assert.DoesNotThrow(() => Core.Helpers.Io.DeleteDirectory(directory));
 
             // Assert
-            Assert.IsEmpty(result.Message);
-            Assert.AreEqual(Status.Ok, result.Status);
             Assert.IsFalse(Directory.Exists(directory));
             foreach (var file in files)
             {

@@ -30,66 +30,42 @@ namespace Faktory.Tests.Integration.Helpers.MsBuild
         [NonParallelizable]
         public void Run_CantFindMsBuild_ReportsErrorWithHelp()
         {
-            // Arrange
             Config.Set("MSBuildPath", "");
 
-            // Act - Run the test app
-            var result = Core.Helpers.MsBuild.Run("", "nada", "Debug");
+            var exception = Assert.Throws<Exception>(() => Core.Helpers.MsBuild.Run("", "nada", "Debug"));
 
-            // Assert
-            Assert.That(result.Status, Is.EqualTo(Status.Error));
-            Assert.That(result.Message, Is.EqualTo("Config option 'MSBuildPath' not set. Please override Configure()."));
-            Assert.That(result.ExitCode, Is.Null);
+            Assert.That(exception.Message, Is.EqualTo("Config option 'MSBuildPath' not set. Please override Configure()."));
         }
 
         [Test, Order(2)]
         [NonParallelizable]
         public void Run_WithSolutionOrProjectDoesNotExist_Fails()
         {
-            // Arrange
             Config.Set("MSBuildPath", MsBuildPath);
 
-            // Act 
-            var result = Core.Helpers.MsBuild.Run("nada");
+            var exception = Assert.Throws<Exception>(() => Core.Helpers.MsBuild.Run("nada"));
 
-            // Assert
-            Assert.That(result.Status, Is.EqualTo(Status.Error));
-            Assert.That(result.Message, Is.EqualTo("Could not find 'nada'"));
-            Assert.That(result.ExitCode, Is.Null);
+            Assert.That(exception.Message, Is.EqualTo("Could not find 'nada'"));
         }   
 
         [Test, Order(3)]
         [NonParallelizable]
         public void Run_WithDefaults_Succeeds()
         {
-            // Arrange
             Config.Set("MSBuildPath", MsBuildPath);
             var solutionPath = Path.Combine(BasePath, "MsBuildTest.sln");
 
-            // Act 
-            var result = Core.Helpers.MsBuild.Run(solutionPath);
-
-            // Assert
-            Assert.That(result.Status, Is.EqualTo(Status.Ok));
-            Assert.IsEmpty(result.Message);
-            Assert.AreEqual(0, result.ExitCode);
+            Assert.DoesNotThrow(() => Core.Helpers.MsBuild.Run(solutionPath));
         }   
 
         [Test, Order(4)]
         [NonParallelizable]
         public void Run_WithArgs_Succeeds()
         {
-            // Arrange 
             Config.Set("MSBuildPath", MsBuildPath);
             var solutionPath = Path.Combine(BasePath, "MsBuildTest.sln");
 
-            // Act 
-            var result = Core.Helpers.MsBuild.Run(solutionPath, "Debug","x64", "Build", "/v:quiet");
-
-            // Assert
-            Assert.That(result.Status, Is.EqualTo(Status.Ok));
-            Assert.IsEmpty(result.Message);
-            Assert.AreEqual(0, result.ExitCode);
+            Assert.DoesNotThrow(() => Core.Helpers.MsBuild.Run(solutionPath, "Debug","x64", "Build", "/v:quiet"));
             Assert.That(File.Exists(Path.Combine(BasePath, @"bin\x64\Debug\MsBuildTest.exe")));
         }
         
@@ -97,17 +73,10 @@ namespace Faktory.Tests.Integration.Helpers.MsBuild
         [NonParallelizable]
         public void Run_Clean_Succeeds()
         {
-            // Arrange 
             Config.Set("MSBuildPath", MsBuildPath);
             var solutionPath = Path.Combine(BasePath, "MsBuildTest.sln");
 
-            // Act 
-            var result = Core.Helpers.MsBuild.Clean(solutionPath);
-
-            // Assert
-            Assert.That(result.Status, Is.EqualTo(Status.Ok));
-            Assert.IsEmpty(result.Message);
-            Assert.AreEqual(0, result.ExitCode);
+            Assert.DoesNotThrow(() => Core.Helpers.MsBuild.Clean(solutionPath));
             Assert.False(File.Exists(Path.Combine(BasePath, @"bin\x64\Debug\MsBuildTest.exe")));
         }
     }
