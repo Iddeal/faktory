@@ -110,6 +110,13 @@ public class SpectreLogWriter : ILogWriter
     public void Write(LogLine line)
     {
         var content = $"[{_colorMap[line.Color]}]{line.Text.EscapeMarkup()}[/]";
-        AnsiConsole.MarkupLine(content);
+        if (line.LineFeed)
+        {
+            AnsiConsole.MarkupLine(content);
+        }
+        else
+        {
+            AnsiConsole.Markup(content);
+        }
     }
 }

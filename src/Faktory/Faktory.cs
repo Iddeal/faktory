@@ -14,6 +14,9 @@ namespace Faktory.Core
 
         public List<ActionResult> ActionResults { get; } = new();
         public List<string> RequiredOptions { get; } = new();
+        /// <summary>
+        /// List of options provided as arguments to the CLI.
+        /// </summary>
         public Options Options => Boot.Options;
 
         /// <summary>

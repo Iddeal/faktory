@@ -6,6 +6,9 @@ namespace Faktory.Core
 {
     internal static class Boot
     {
+        /// <summary>
+        /// List of options passed into the CLI.
+        /// </summary>
         public static Options Options { get; private set; }
         public static Logger Logger { get; private set; } = new();
         public static string SourcePath { get; } = AppDomain.CurrentDomain.BaseDirectory;
