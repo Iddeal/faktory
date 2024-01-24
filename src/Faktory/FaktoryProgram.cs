@@ -25,7 +25,6 @@ namespace Faktory.Core
             {
                 ctx.Spinner(Spinner.Known.Dots2);
                 Action<string> updateStatus = (s) => UpdateStatus(s, ctx);
-
                 if (FaktoryRunner.BootUp(args, updateStatus) == false) return;
 
                 var faktory = BuildCustomFaktory(updateStatus);

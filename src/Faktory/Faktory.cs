@@ -30,8 +30,6 @@ namespace Faktory.Core
             Boot.Logger.Error("Please override the RunBuild() method.");
         }
 
-        
-
         /// <summary>
         /// Output a line to the final log.
         /// </summary>
@@ -120,7 +118,6 @@ namespace Faktory.Core
             {
                 RequiredOptions.Add(arg.ToLower());
             }
-
             _missingRequiredOptions = Boot.Options.HasAll(RequiredOptions) == false;
 
             return this;
