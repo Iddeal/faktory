@@ -44,6 +44,8 @@ namespace Faktory.Core
         static bool DisplayOptions(Action<string> updateStatus, string args)
         {
             updateStatus("Logging options...");
+            if (string.IsNullOrEmpty(args)) return true;
+
             Logger.Info("Options: [", lineFeed: false);
             foreach (var option in Options)
             {
