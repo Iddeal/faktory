@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Faktory.Core.Exceptions;
 
 namespace Faktory.Core.Helpers;
@@ -13,8 +14,9 @@ public static class Process
     /// <param name="command">Process to run.</param>
     /// <param name="arguments">Optional arguments</param>
     /// <param name="workingDirectory">Defaults to script directory.</param>
+    /// <param name="validExitCodes">List of exit codes that are considered Success.</param>
     /// <returns></returns>
-    public static void Run(string command, string arguments = "", string workingDirectory = null)
+    public static void Run(string command, string arguments = "", string workingDirectory = null, params int[] validExitCodes)
     {
         var standardOut = new List<string>();
         var standardError = new List<string>();
@@ -55,7 +57,7 @@ public static class Process
             
             process.WaitForExit();
 
-            if (process.ExitCode != 0) throw new Exception($"Process exited with code {process.ExitCode}");
+            if (process.ExitCode != 0 && !validExitCodes.Contains(process.ExitCode)) throw new Exception($"Process exited with code {process.ExitCode}");
         }
         catch (Exception e)
         {
