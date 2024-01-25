@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="Assertions.cs" />
     <Compile Include="FaktoryTests.cs" />
+    <Compile Include="Integration\Helpers\IntegrationBootUp.cs" />
     <Compile Include="Integration\Helpers\Io\CleanTests.cs" />
     <Compile Include="Integration\Helpers\Io\CopyTests.cs" />
     <Compile Include="Integration\Helpers\Io\DeleteTests.cs" />

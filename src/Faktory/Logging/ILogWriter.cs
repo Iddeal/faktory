@@ -36,12 +36,24 @@ public class ConsoleLogWriter : ILogWriter
 /// </summary>
 public class TestLogWriter : ILogWriter
 {
+    public TestLogWriter()
+    {
+    }
+
+    public TestLogWriter(Action<LogLine> testWrite)
+    {
+        TestWrite = testWrite;
+    }
+
     public List<string> AllMessages { get; } = new();
+    public Action<LogLine> TestWrite { get; set; }
+
+    string _buffer = "";
 
     public void Write(List<LogLine> lines)
     {
         var parsedLine = "";
-        bool parsingLines = false;
+        var parsingLines = false;
         foreach (var line in lines)
         {
             var content = $"{line.Text}";
@@ -64,7 +76,14 @@ public class TestLogWriter : ILogWriter
 
     public void Write(LogLine line)
     {
-        throw new NotImplementedException();
+        _buffer += line.Text;
+        if (line.LineFeed)
+        {
+            AllMessages.Add(_buffer);
+            _buffer = "";
+        }
+
+        TestWrite?.Invoke(line);
     }
 }
 

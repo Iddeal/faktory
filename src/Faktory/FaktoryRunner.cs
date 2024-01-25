@@ -13,12 +13,12 @@ public static class FaktoryRunner
 
     public static bool BootUp(string args, Action<string> updateStatus)
     {
-        return Boot.Up(args, updateStatus);
+        LogWriter ??= new SpectreLogWriter();
+        return Boot.Up(args, updateStatus, LogWriter);
     }
 
     public static bool Run(Faktory faktory)
     {
-        LogWriter ??= new SpectreLogWriter();
         faktory.RunBuild();
         if (faktory.Executed == false)
         {

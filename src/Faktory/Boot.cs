@@ -14,14 +14,15 @@ namespace Faktory.Core
         public static string SourcePath { get; } = AppDomain.CurrentDomain.BaseDirectory;
 
         /// <summary>
-        /// Load all information requires for Faktory to run.
-        /// Each step accepts a StatusContext and the arguments passed to the program
+        /// Load all information required for Faktory to run.
         /// </summary>
         /// <param name="args"></param>
-        public static bool Up(string args, Action<string> updateStatus)
+        /// <param name="updateStatus"></param>
+        /// <param name="logWriter"></param>
+        public static bool Up(string args, Action<string> updateStatus, ILogWriter logWriter)
         {
             Logger = new Logger();
-            Logger.Writer = new SpectreLogWriter();
+            Logger.Writer = logWriter;
             return With(updateStatus, args, CaptureOptions, DisplayOptions);
         }
 

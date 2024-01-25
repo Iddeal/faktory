@@ -42,12 +42,6 @@ namespace Faktory.Core
         public void Log(string message, LogColor color = LogColor.White, bool lineFeed = true) => Boot.Logger.Info(message, color, lineFeed);
 
         /// <summary>
-        /// Not for external use.
-        /// </summary>
-        /// <param name="logWriter"></param>
-        public void WriteLog(ILogWriter logWriter) => Boot.Logger.Write(logWriter);
-
-        /// <summary>
         /// Run all the tasks defined in your Faktory
         /// </summary>
         public void Execute()

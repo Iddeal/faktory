@@ -19,11 +19,6 @@ namespace Faktory.Core.Logging
 
         public void Info(string message, LogColor color = LogColor.White, bool lineFeed = true) => InternalWrite(message, lineFeed, LogType.Info, color);
 
-        public void Write(ILogWriter logWriter)
-        {
-            logWriter.Write(_logLines);
-        }
-
         void InternalWrite(string message, bool lineFeed, LogType logType, LogColor color, Exception e = null)
         {
             var indent = new string(' ', IndentLevel * 4);

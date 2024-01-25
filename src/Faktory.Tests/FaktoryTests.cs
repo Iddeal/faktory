@@ -9,11 +9,16 @@ namespace Faktory.Tests
     public class FaktoryTests
     {
         static readonly Action<string> UpdateStatus = s => TestContext.Progress.WriteLine(s);
-        static readonly TestLogWriter LogWriter = new TestLogWriter();
+        static TestLogWriter LogWriter;
 
-        [OneTimeSetUp]
+        [SetUp]
         public void Init()
         {
+            LogWriter = new TestLogWriter(testWrite: line =>
+            {
+                var linedFeed = line.LineFeed ? Environment.NewLine : "";
+                var message = $"{line.Text}{linedFeed}";
+            });
             FaktoryRunner.LogWriter = LogWriter;
         }
 
