@@ -14,6 +14,7 @@ namespace Faktory.Tests.Integration.Helpers.Io
         const string BasePath = "./CleanTestFolder";
 
         [Test, Order(1)]
+        [NonParallelizable]
         public void Clean_ShouldDeleteFilesAndFoldersInDirectory()
         {
 
@@ -30,8 +31,9 @@ namespace Faktory.Tests.Integration.Helpers.Io
         }
 
         [Test, Order(2)]
+        [NonParallelizable]
         public void Clean_WhenFileInUse_ReportsFileInUse()
-        { 
+        {
             // Arrange 
 
             // Create a file and lock it

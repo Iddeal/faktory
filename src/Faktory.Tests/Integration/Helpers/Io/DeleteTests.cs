@@ -14,6 +14,7 @@ namespace Faktory.Tests.Integration.Helpers.Io
         const string BasePath = "./DeleteTestFolder";
 
         [Test, Order(1)]
+        [NonParallelizable]
         public void DeleteFile_ShouldDeleteFile()
         {
             // Arrange 
@@ -28,6 +29,7 @@ namespace Faktory.Tests.Integration.Helpers.Io
         }
 
         [Test, Order(2)]
+        [NonParallelizable]
         public void DeleteFile_WhenFileInUse_ReportsFileInUse()
         {
             // Arrange 
@@ -45,6 +47,7 @@ namespace Faktory.Tests.Integration.Helpers.Io
         }
 
         [Test, Order(3)]
+        [NonParallelizable]
         public void DeleteFile_MultipleFiles()
         {
             // Arrange 
@@ -62,6 +65,7 @@ namespace Faktory.Tests.Integration.Helpers.Io
         }
 
         [Test, Order(4)]
+        [NonParallelizable]
         public void DeleteDirectory_WhenEmpty_Succeeds()
         {
             // Arrange 
@@ -76,6 +80,7 @@ namespace Faktory.Tests.Integration.Helpers.Io
         }
 
         [Test, Order(5)]
+        [NonParallelizable]
         public void DeleteDirectory_WhenNotEmpty_Succeeds()
         {
             // Arrange 

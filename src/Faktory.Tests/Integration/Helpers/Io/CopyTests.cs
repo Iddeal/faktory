@@ -28,6 +28,7 @@ namespace Faktory.Tests.Integration.Helpers.Io
         }
 
         [Test, Order(1)]
+        [NonParallelizable]
         public void Copy_SingleFile_ShouldSucceed()
         {
             // Destination should be empty now
@@ -46,6 +47,7 @@ namespace Faktory.Tests.Integration.Helpers.Io
         }
 
         [Test, Order(2)]
+        [NonParallelizable]
         public void Copy_DestinationDoesNotExist_ShouldSucceed()
         {
             // Destination should be empty now
@@ -67,6 +69,7 @@ namespace Faktory.Tests.Integration.Helpers.Io
         }
 
         [Test, Order(3)]
+        [NonParallelizable]
         public void Copy_MultipleFiles_ShouldSucceed()
         {
             // Destination should be empty now
@@ -83,6 +86,7 @@ namespace Faktory.Tests.Integration.Helpers.Io
         }
 
         [Test, Order(4)]
+        [NonParallelizable]
         public void Copy_Robocopy_ShouldSucceed()
         {
             // Destination should be empty now
@@ -131,6 +135,7 @@ namespace Faktory.Tests.Integration.Helpers.Io
         }
 
         [Test, Order(5)]
+        [NonParallelizable]
         public void Copy_RobocopyWithInvalidParameters_ShouldFail()
         {
             // Act - Copy the files
@@ -142,6 +147,7 @@ namespace Faktory.Tests.Integration.Helpers.Io
         }
 
         [Test, Order(6)]
+        [NonParallelizable]
         public void Copy_RobocopyWithSourceDoesNotExist_ShouldFail()
         {
             // Arrange
@@ -156,6 +162,7 @@ namespace Faktory.Tests.Integration.Helpers.Io
         }
 
         [Test, Order(7)]
+        [NonParallelizable]
         public void Copy_FileDoesNotExist_ShouldFail()
         {
             // Destination should be empty now

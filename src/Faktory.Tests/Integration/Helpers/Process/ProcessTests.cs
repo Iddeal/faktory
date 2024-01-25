@@ -10,6 +10,7 @@ namespace Faktory.Tests.Integration.Helpers.Process
     public class ProcessTests
     {
         [Test, Order(1)]
+        [NonParallelizable]
         public void Run_NotFoundApp_ReturnsFailure()
         {
             // Act 
@@ -20,6 +21,7 @@ namespace Faktory.Tests.Integration.Helpers.Process
         }
 
         [Test, Order(2)]
+        [NonParallelizable]
         public void Run_TestAppWithNoArguments_ReturnsSuccess()
         {
             // Act - Run the test app
@@ -27,6 +29,7 @@ namespace Faktory.Tests.Integration.Helpers.Process
         }
 
         [Test, Order(3)]
+        [NonParallelizable]
         public void Run_TestAppWithPlannedFailed_ReturnsFailure()
         {
             // Act - Run the test app
