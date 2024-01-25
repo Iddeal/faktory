@@ -63,6 +63,7 @@
     <Compile Include="Config.cs" />
     <Compile Include="Extensions\SpectreExtensions.cs" />
     <Compile Include="FaktoryRunner.cs" />
+    <Compile Include="Helpers\AssemblyUpdater.cs" />
     <Compile Include="Helpers\IoClean.cs" />
     <Compile Include="Exceptions\MissingFaktoryException.cs" />
     <Compile Include="Exceptions\NotBootedException.cs" />
