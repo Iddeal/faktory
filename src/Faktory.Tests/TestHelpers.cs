@@ -63,6 +63,15 @@ namespace Faktory.Tests
 
                 return files;
             }
+
+            public static void Reset(string path)
+            {
+                if (Directory.Exists(path))
+                {
+                    Directory.Delete(path, true);
+                }
+                Directory.CreateDirectory(path);
+            }
         }
     }
 }
