@@ -71,6 +71,7 @@
     <Compile Include="FaktoryProgram.cs" />
     <Compile Include="Helpers\IoCopy.cs" />
     <Compile Include="Helpers\IoDelete.cs" />
+    <Compile Include="Helpers\IoDirectory.cs" />
     <Compile Include="Helpers\MsBuild.cs" />
     <Compile Include="Helpers\Process.cs" />
     <Compile Include="InternalUtilities\FileUsage.cs" />

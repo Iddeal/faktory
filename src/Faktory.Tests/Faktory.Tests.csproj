@@ -77,6 +77,7 @@
     <Compile Include="Integration\Helpers\Io\CleanTests.cs" />
     <Compile Include="Integration\Helpers\Io\CopyTests.cs" />
     <Compile Include="Integration\Helpers\Io\DeleteTests.cs" />
+    <Compile Include="Integration\Helpers\Io\DirectoryTests.cs" />
     <Compile Include="Integration\Helpers\MsBuild\MsBuildTests.cs" />
     <Compile Include="Integration\Helpers\Process\ProcessTests.cs" />
     <Compile Include="OptionsTests.cs" />
