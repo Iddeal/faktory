@@ -14,12 +14,12 @@ public static class MsBuild
         Run(solutionPath, configuration, platform, "Clean");
     }
 
-    public static void Run(string solutionPath, string configuration = "Debug", string platform = "x64", string target = "Build", string args = null)
+    public static void Run(string solutionPath, string configuration = "Debug", string platform = "x64", string target = "Build", bool optimize = false, string outputDir = null, string args = null)
     {
-        ExecuteMsBuild(solutionPath, configuration, platform, target, args);
+        ExecuteMsBuild(solutionPath, configuration, platform, target, optimize, outputDir, args);
     }
 
-    static void ExecuteMsBuild(string solutionPath, string configuration, string platform, string target, string args)
+    static void ExecuteMsBuild(string solutionPath, string configuration, string platform, string target, bool optimize, string outputDir, string args)
     {
         if (MsBuildExists() == false)
         {
@@ -31,12 +31,17 @@ public static class MsBuild
             throw new Exception($"Could not find '{solutionPath}'");
         }
 
-        Process.Run(MsBuildPath, GetArguments(solutionPath, configuration, platform, target, args));
+        Process.Run(MsBuildPath, GetArguments(solutionPath, configuration, platform, target, optimize, outputDir, args));
     }
 
-    static string GetArguments(string solutionPath, string configuration, string platform, string target, string args)
+    static string GetArguments(string solutionPath, string configuration, string platform, string target, bool optimize, string outputDir, string args)
     {
-        var finalArgs = $"{solutionPath} /p:Configuration={configuration} /p:Platform=\"{platform}\" /t:{target}";
+        var finalArgs = $"{solutionPath} /p:Configuration={configuration} /p:Platform=\"{platform}\" /t:{target} /p:Optimize={optimize}";
+        if (string.IsNullOrEmpty(outputDir) == false)
+        {
+            finalArgs += $@" /p:OutputPath={outputDir}";
+        }
+
         return string.IsNullOrEmpty(args) ? finalArgs : $"{finalArgs} {args}";
     }
 

@@ -65,7 +65,7 @@ namespace Faktory.Tests.Integration.Helpers.MsBuild
             Config.Set("MSBuildPath", MsBuildPath);
             var solutionPath = Path.Combine(BasePath, "MsBuildTest.sln");
 
-            Assert.DoesNotThrow(() => Core.Helpers.MsBuild.Run(solutionPath, "Debug","x64", "Build", "/v:quiet"));
+            Assert.DoesNotThrow(() => Core.Helpers.MsBuild.Run(solutionPath, "Debug","x64", args: "/v:quiet"));
             Assert.That(File.Exists(Path.Combine(BasePath, @"bin\x64\Debug\MsBuildTest.exe")));
         }
         
