@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Faktory.Core.Exceptions;
 using Faktory.Core.Logging;
 
 namespace Faktory.Core
@@ -42,12 +43,29 @@ namespace Faktory.Core
         public void Log(string message, LogColor color = LogColor.White, bool lineFeed = true) => Boot.Logger.Info(message, color, lineFeed);
 
         /// <summary>
+        /// Causes the build to stop with a failure.
+        /// </summary>
+        /// <param name="reason"></param>
+        public void Fail(string reason)
+        {
+            throw new BuildFailureException(reason);
+        }
+
+        /// <summary>
         /// Run all the tasks defined in your Faktory
         /// </summary>
         public void Execute()
         {
             // Load the custom Config
-            Configure();
+            try
+            {
+                Configure();
+            }
+            catch (BuildFailureException bfe)
+            {
+                Boot.Logger.Error(bfe.Message);
+                return;
+            }
 
             Executed = true;
             if (_missingRequiredOptions) return;
@@ -62,8 +80,15 @@ namespace Faktory.Core
                 {
                     Boot.Logger.Info($"{x.Method.Name}() -> ", LogColor.Green);
                     Boot.Logger.IndentLevel = 1;
-                    result.Duration = ExecuteAndTimeAction(x);;
+                    result.Duration = ExecuteAndTimeAction(x);
+                    ;
                     result.Success = true;
+                }
+                catch (BuildFailureException bfe)
+                {
+                    result.Success = false;
+                    Boot.Logger.Error(bfe.Message);
+                    return;
                 }
                 catch (Exception e)
                 {
