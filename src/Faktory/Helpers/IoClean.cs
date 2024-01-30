@@ -18,6 +18,12 @@ namespace Faktory.Core.Helpers
         {
             try
             {
+                if (Directory.Exists(path) == false)
+                {
+                    Directory.CreateDirectory(path);
+                    return;
+                }
+
                 // Recursively delete all the files and folders in the path.
                 foreach (var file in Directory.GetFiles(path))
                 {
