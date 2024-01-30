@@ -12,7 +12,7 @@ namespace Faktory.Tests.Integration.Helpers.Io
     public class CopyTests
     {
         static string _destination;
-        const string BasePath = "./CopyTestFolder";
+        const string BasePath = @".\CopyTest Folder";
 
         [SetUp]
         public void ResetDestination()
@@ -114,15 +114,16 @@ namespace Faktory.Tests.Integration.Helpers.Io
 
             files.ToList().ForEach(x => TestHelpers.Disk.CreateFile(x.Path, x.FileName));
 
-            // Act - Copy the files
-            Assert.DoesNotThrow(() => Core.Helpers.Io.Copy(BasePath, _destination, "*.dll *.exe *.exe.config CefSharp.* *.pak *.dat *.bin", "/S /XF Destination *.vshost* *.xml *.pdb"));
+            //// Act - Copy the files
+            Assert.DoesNotThrow(() => Core.Helpers.Io.Copy(BasePath, $@"{_destination}\", "*.dll *.exe *.exe.config CefSharp.* *.pak *.dat *.bin", "/S /XF Destination *.vshost* *.xml *.pdb"));
 
             // Assert
             foreach (var file in files)
             {
+                var destinationBinPath = Path.Combine(_destination, "bin");
                 var destinationFile = file.Path == BasePath
                     ? Path.Combine(_destination, file.FileName)
-                    : Path.Combine(_destination, "bin", file.FileName);
+                    : Path.Combine(destinationBinPath, file.FileName);
                 if (file.Copied)
                 {
                     Assert.IsTrue(File.Exists(destinationFile), $"Expected `{destinationFile}` to exists but it did not.");

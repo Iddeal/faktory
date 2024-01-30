@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
+using Faktory.Core.Extensions;
 using Faktory.Core.Logging;
 
 namespace Faktory.Core.Helpers;
@@ -60,19 +61,23 @@ public static partial class Io
     /// <param name="files">Specifies the file or files to be copied. Wildcard characters (* or ?) are supported. If you don't specify this parameter, *.* is used as the default value.</param>
     /// <param name="options">Specifies the options to use with the robocopy command, including copy, file, retry, logging, and job options.</param>
     /// <returns></returns>
-    public static void Copy(string source, string destination, string files, string options)
+    public static void Copy(string source, string destination, string files, string options = "")
     {
         try
         {
+            var arguments = $"{NormalizePath(source)} {NormalizePath(destination)} {files} {options}";
+
+            Boot.Logger.Info($"Running robocopy.exe {arguments}");
+
             var process = new System.Diagnostics.Process();
             process.StartInfo.FileName = "robocopy.exe";
-            process.StartInfo.Arguments = $"{source} {destination} {files} {options}";
+            process.StartInfo.Arguments = arguments;
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.CreateNoWindow = true;
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             process.Start();
-
+            
             var errorHasOccurred = "";
             while (process.StandardOutput.EndOfStream == false)
             {
@@ -85,7 +90,7 @@ public static partial class Io
                 }
                 Boot.Logger.Info(dataLine);
             }
-
+            
             process.WaitForExit();
 
             if (string.IsNullOrEmpty(errorHasOccurred) && process.ExitCode < 8) return;
@@ -100,6 +105,14 @@ public static partial class Io
         {
             throw new Exception($"Error calling robocopy: {e.Message}");
         }
+    }
+
+    /// <summary>
+    /// Robocopy requires paths to be quoted and directories to end with a ". ". (E.g., C:\. ) 
+    /// </summary>
+    static string NormalizePath(string path)
+    {
+        return path.HasDirectoryEnding() ? $"\"{path}.\" " : $"\"{path}\" ";
     }
 
     static string TryParseRobocopyError(string dataLine)
