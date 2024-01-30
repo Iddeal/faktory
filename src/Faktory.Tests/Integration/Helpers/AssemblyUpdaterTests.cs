@@ -21,7 +21,7 @@ namespace Faktory.Tests.Integration.Helpers
 
         [Test, Order(2)]
         [NonParallelizable]
-        public void Update_ValidFile_Succeeds()
+        public void Update_WithOutAllAttributes_Succeeds()
         {
 
             // Arrange 
@@ -30,10 +30,6 @@ namespace Faktory.Tests.Integration.Helpers
             {
                 Title = "My Title",
                 Description = "My Description",
-                Company = "My Company",
-                Product = "My Product",
-                Copyright = "My Copyright",
-                Trademark = "My Trademark",
                 Version = "My Version",
                 FileVersion = "My FileVersion"
             };
@@ -48,22 +44,12 @@ namespace Faktory.Tests.Integration.Helpers
             // Assert Before State
             StringAssert.Contains("AssemblyTitle(\"MsBuildTest\")", before);
             StringAssert.Contains("AssemblyDescription(\"\")", before);
-            StringAssert.Contains("AssemblyConfiguration(\"\")", before);
-            StringAssert.Contains("AssemblyCompany(\"\")", before);
-            StringAssert.Contains("AssemblyProduct(\"MsBuildTest\")", before);
-            StringAssert.Contains("AssemblyCopyright(\"Copyright ©  2024\")", before);
-            StringAssert.Contains("AssemblyTrademark(\"\")", before);
             StringAssert.Contains("AssemblyVersion(\"1.0.0.0\")", before);
             StringAssert.Contains("AssemblyFileVersion(\"1.0.0.0\")", before);
 
             // Assert After State
             StringAssert.Contains("AssemblyTitle(\"My Title\")", after);
             StringAssert.Contains("AssemblyDescription(\"My Description\")", after);
-            StringAssert.Contains("AssemblyConfiguration(\"\")", after);
-            StringAssert.Contains("AssemblyCompany(\"My Company\")", after);
-            StringAssert.Contains("AssemblyProduct(\"My Product\")", after);
-            StringAssert.Contains("AssemblyCopyright(\"My Copyright\")", after);
-            StringAssert.Contains("AssemblyTrademark(\"My Trademark\")", after);
             StringAssert.Contains("AssemblyVersion(\"My Version\")", after);
             StringAssert.Contains("AssemblyFileVersion(\"My FileVersion\")", after);
         }
