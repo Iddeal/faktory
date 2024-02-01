@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using Faktory.Core.InternalUtilities;
 
 namespace Faktory.Core.Helpers
@@ -27,13 +28,21 @@ namespace Faktory.Core.Helpers
                 // Recursively delete all the files and folders in the path.
                 foreach (var file in Directory.GetFiles(path))
                 {
-                    var (inUse, processName) = FileUsage.GetFileUsage(file);
-                    if (inUse)
+                    try
                     {
-                        throw new Exception($"Can't delete `{file}`. It's locked by {processName}.");
+                        Boot.Logger.Info($"Deleting file: `{file}`");
+                        File.Delete(file);
                     }
-                    Boot.Logger.Info($"Deleting file: `{file}`");
-                    File.Delete(file);
+                    catch 
+                    {
+                        var (inUse, processName) = FileUsage.GetFileUsage(file);
+                        if (inUse)
+                        {
+                            throw new Exception($"Can't delete `{file}`. It's locked by {processName}.");
+                        }
+
+                        throw;
+                    }
                 }
 
                 foreach (var directory in Directory.GetDirectories(path))
