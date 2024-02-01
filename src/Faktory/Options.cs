@@ -60,7 +60,7 @@ namespace Faktory.Core
                             // Stop finding Value
                             findingKey = true;
                             // Store this key/value pair
-                            _options[currentKey] = currentVal;
+                            SetConfigValueForKey(currentKey, currentVal);
                             currentKey = "";
                             currentVal = "";
                         }
@@ -84,7 +84,7 @@ namespace Faktory.Core
                             // Stop finding Value
                             findingKey = true;
                             // Store this key/value pair
-                            _options[currentKey] = currentVal;
+                            SetConfigValueForKey(currentKey, currentVal);
                             currentKey = "";
                             currentVal = "";
                         }
@@ -99,8 +99,13 @@ namespace Faktory.Core
 
             if (string.IsNullOrEmpty(currentKey) == false)
             {
-                _options[currentKey] = currentVal;
+                SetConfigValueForKey(currentKey, currentVal);
             }
+        }
+
+        void SetConfigValueForKey(string currentKey, string currentVal)
+        {
+            _options[currentKey] = currentVal;
         }
 
         void ValidateOptions()
