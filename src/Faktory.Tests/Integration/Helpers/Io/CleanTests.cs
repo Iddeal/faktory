@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Faktory.Core;
 using NUnit.Framework;
@@ -40,11 +41,12 @@ namespace Faktory.Tests.Integration.Helpers.Io
             TestHelpers.Disk.CreateFile(BasePath, "lockedFile_clean.txt");
             var filePath = Path.Combine(BasePath, "lockedFile_clean.txt");
 
-            Task.Run(() => TestHelpers.Disk.LockFile(filePath, 3));
+            Task.Run(() => TestHelpers.Disk.LockFile(filePath, 4));
 
             // Act - Clean the path
             var exception = Assert.Throws<Exception>(() => Core.Helpers.Io.CleanDirectory(BasePath));
 
+            Thread.Sleep(4000); // Wait for Task.Run to exit
             // Assert
             StringAssert.Contains($"Can't delete `{filePath}`. It's locked by ", exception.Message);
         }

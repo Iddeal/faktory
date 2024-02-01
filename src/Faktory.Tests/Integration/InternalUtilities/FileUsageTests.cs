@@ -7,7 +7,6 @@ using NUnit.Framework;
 namespace Faktory.Tests.Integration.InternalUtilities
 {
     [TestFixture]
-    [NonParallelizable]
     public class FileUsageTests
     {
         static string _filePath;
@@ -27,6 +26,7 @@ namespace Faktory.Tests.Integration.InternalUtilities
         }
 
         [Test]
+        [NonParallelizable]
         public void FileUsage_ReturnsNameOfProcessLockingFile()
         {
             // Create file and lock it
