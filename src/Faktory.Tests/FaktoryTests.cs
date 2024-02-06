@@ -175,4 +175,27 @@ namespace Faktory.Tests
 
         protected override void RunBuild() { Execute(); }
     }
+
+    public class TestFaktoryWithTwoBuildSteps : Core.Faktory
+    {
+        protected override void RunBuild() =>
+            Run(First)
+                .Then(Second)
+                .Execute();
+
+        public void First() { }
+        public void Second() { }
+    }
+
+    public class TestFaktoryWithAFailingSecondStep : Core.Faktory
+    {
+        protected override void RunBuild() =>
+            Run(First)
+                .Then(Second)
+                .Execute();
+
+        public void First() { }
+        public void Second() => Fail("Failure");
+    }
+
 }

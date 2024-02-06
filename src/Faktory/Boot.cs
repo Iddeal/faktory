@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Faktory.Core.InternalUtilities;
 using Faktory.Core.Logging;
 
 namespace Faktory.Core
@@ -12,6 +13,7 @@ namespace Faktory.Core
         public static Options Options { get; private set; }
         public static Logger Logger { get; private set; } = new();
         public static string SourcePath { get; } = AppDomain.CurrentDomain.BaseDirectory;
+        public static Context.CiRunners GetCiRunner() => Context.CiRunner;
 
         /// <summary>
         /// Load all information required for Faktory to run.

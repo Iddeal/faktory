@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using Faktory.Core.Exceptions;
 using Faktory.Core.Logging;
+using Faktory.Core.ProgressReporter;
 
 namespace Faktory.Core
 {
@@ -19,6 +20,7 @@ namespace Faktory.Core
         /// List of options provided as arguments to the CLI.
         /// </summary>
         public Options Options => Boot.Options;
+        public IProgressReporter Reporter => FaktoryRunner.ProgressReporter;
 
         /// <summary>
         /// Returns the path where the Faktory is running from.
@@ -61,9 +63,9 @@ namespace Faktory.Core
             {
                 Configure();
             }
-            catch (BuildFailureException bfe)
+            catch (Exception e)
             {
-                Boot.Logger.Error(bfe.Message);
+                Boot.Logger.Error(e);
                 return;
             }
 
@@ -74,31 +76,27 @@ namespace Faktory.Core
 
             foreach (var x in BuildActions)
             {
-                _updateStatus($"Running {x.Method.Name}()");
-                var result = new ActionResult { Name = x.Method.Name };
+                var methodName = x.Method.Name;
+                _updateStatus($"Running {methodName}()");
+                var result = new ActionResult { Name = methodName };
                 try
                 {
-                    Boot.Logger.Info($"{x.Method.Name}() -> ", LogColor.Green);
+                    Boot.Logger.Info($"{methodName}() -> ", LogColor.Green);
                     Boot.Logger.IndentLevel = 1;
+                    Reporter.ReportStartProgress(methodName);
                     result.Duration = ExecuteAndTimeAction(x);
-                    ;
-                    result.Success = true;
-                }
-                catch (BuildFailureException bfe)
-                {
-                    result.Success = false;
-                    Boot.Logger.Error(bfe.Message);
-                    return;
+                    Reporter.ReportEndProgress(methodName);
                 }
                 catch (Exception e)
                 {
-                    result.Success = false;
+                    result.LastException = e;
                     Boot.Logger.Error(e);
                     return;
                 }
                 finally
                 {
                     Boot.Logger.IndentLevel = 0;
+                    if (result.LastException != null) Reporter.ReportFailure($"{methodName} failed with - {result.LastException.Message}");
                     ActionResults.Add(result);
                 }
             }
@@ -108,7 +106,7 @@ namespace Faktory.Core
         {
             var sw = new Stopwatch();
             sw.Start();
-             x.Invoke();
+            x.Invoke();
             sw.Stop();
             return sw.Elapsed;
         }
