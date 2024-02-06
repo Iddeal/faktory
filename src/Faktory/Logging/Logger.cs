@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Faktory.Core.Exceptions;
+using System;
 using System.Collections.Generic;
 
 namespace Faktory.Core.Logging
@@ -21,6 +22,8 @@ namespace Faktory.Core.Logging
 
         void InternalWrite(string message, bool lineFeed, LogType logType, LogColor color, Exception e = null)
         {
+            if (e is BuildFailureException) message = $"Build aborted - {message}";
+
             var indent = new string(' ', IndentLevel * 4);
 
             var logLine = new LogLine

@@ -1,5 +1,7 @@
 ﻿using System;
+using Faktory.Core.InternalUtilities;
 using Faktory.Core.Logging;
+using Faktory.Core.ProgressReporter;
 
 namespace Faktory.Core;
 
@@ -10,10 +12,14 @@ public static class FaktoryRunner
     /// Useful to overwrite for unit testing.
     /// </summary>
     public static ILogWriter LogWriter { get; set; }
+    public static IProgressReporter ProgressReporter { get; set; }
 
     public static bool BootUp(string args, Action<string> updateStatus)
     {
         LogWriter ??= new SpectreLogWriter();
+        ProgressReporter ??= Boot.GetCiRunner() == Context.CiRunners.TeamCity
+            ? new TeamCityProgressReporter() 
+            : new NullProgressReporter();
         return Boot.Up(args, updateStatus, LogWriter);
     }
 
@@ -27,4 +33,5 @@ public static class FaktoryRunner
 
         return faktory.Executed;
     }
+
 }
