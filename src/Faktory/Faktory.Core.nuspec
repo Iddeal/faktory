@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Faktory.Core</id>
+    <version>1.0.0.1</version>
+    <authors>Michael Minton</authors>
+    <description>Insanely simple build tool</description>
+    <readme>README.md</readme>
+    <projectUrl>http://github.com/iddeal/faktory</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <releaseNotes>Include dependencies.</releaseNotes>
+    <copyright>Copyright ©️ 2023</copyright>
+    <dependencies>
+      <group targetFramework=".NETFramework4.8.1">
+        <dependency id="Spectre.Console" version="0.47.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="Microsoft.CSharp" targetFramework=".NETFramework4.8.1" />
+      <frameworkAssembly assemblyName="mscorlib" targetFramework=".NETFramework4.8.1" />
+      <frameworkAssembly assemblyName="System.Core" targetFramework=".NETFramework4.8.1" />
+      <frameworkAssembly assemblyName="System.Data.DataSetExtensions" targetFramework=".NETFramework4.8.1" />
+      <frameworkAssembly assemblyName="System.Data" targetFramework=".NETFramework4.8.1" />
+      <frameworkAssembly assemblyName="System" targetFramework=".NETFramework4.8.1" />
+      <frameworkAssembly assemblyName="System.Net.Http" targetFramework=".NETFramework4.8.1" />
+      <frameworkAssembly assemblyName="System.Numerics" targetFramework=".NETFramework4.8.1" />
+      <frameworkAssembly assemblyName="System.Xml" targetFramework=".NETFramework4.8.1" />
+      <frameworkAssembly assemblyName="System.Xml.Linq" targetFramework=".NETFramework4.8.1" />
+    </frameworkAssemblies>
+  </metadata>
+  <files>
+    <file src="..\..\README.md"/>
+  </files>
+</package>
