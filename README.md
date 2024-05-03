@@ -82,3 +82,6 @@ protected override void Configure()
 }
 ```
 
+# More Info
+
+Check out the https://github.com/Iddeal/faktory/wiki for more information.
