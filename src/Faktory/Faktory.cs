@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Faktory.Core.Exceptions;
+using Faktory.Core.InternalUtilities;
 using Faktory.Core.Logging;
 using Faktory.Core.ProgressReporter;
 
@@ -21,6 +22,10 @@ namespace Faktory.Core
         /// </summary>
         public Options Options => Boot.Options;
         public IProgressReporter Reporter => FaktoryRunner.ProgressReporter;
+        /// <summary>
+        /// Determine the context in which the Faktory is running. 
+        /// </summary>
+        public CiRunners Context => Boot.GetCiRunner();
 
         /// <summary>
         /// Returns the path where the Faktory is running from.

@@ -17,7 +17,7 @@ public static class FaktoryRunner
     public static bool BootUp(string args, Action<string> updateStatus)
     {
         LogWriter ??= new SpectreLogWriter();
-        ProgressReporter ??= Boot.GetCiRunner() == Context.CiRunners.TeamCity
+        ProgressReporter ??= Boot.GetCiRunner() == CiRunners.TeamCity
             ? new TeamCityProgressReporter() 
             : new NullProgressReporter();
         return Boot.Up(args, updateStatus, LogWriter);

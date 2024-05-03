@@ -62,6 +62,7 @@
     <Compile Include="Helpers\IoDirectory.cs" />
     <Compile Include="Helpers\MsBuild.cs" />
     <Compile Include="Helpers\Process.cs" />
+    <Compile Include="InternalUtilities\CiRunners.cs" />
     <Compile Include="InternalUtilities\Context.cs" />
     <Compile Include="InternalUtilities\FileUsage.cs" />
     <Compile Include="Logging\ILogWriter.cs" />

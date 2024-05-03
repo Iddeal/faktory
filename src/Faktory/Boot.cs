@@ -13,7 +13,7 @@ namespace Faktory.Core
         public static Options Options { get; private set; }
         public static Logger Logger { get; private set; } = new();
         public static string SourcePath { get; } = AppDomain.CurrentDomain.BaseDirectory;
-        public static Context.CiRunners GetCiRunner() => Context.CiRunner;
+        public static CiRunners GetCiRunner() => Context.CiRunner;
 
         /// <summary>
         /// Load all information required for Faktory to run.
