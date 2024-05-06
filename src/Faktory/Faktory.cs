@@ -101,7 +101,7 @@ namespace Faktory.Core
                 finally
                 {
                     Boot.Logger.IndentLevel = 0;
-                    if (result.LastException != null) Reporter.ReportFailure($"{methodName} failed with - {result.LastException.Message}");
+                    if (!result.Success) Reporter.ReportFailure($"{methodName} failed with - {result.LastException.Message}");
                     ActionResults.Add(result);
                 }
             }
