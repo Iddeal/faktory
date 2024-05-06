@@ -81,7 +81,7 @@ namespace Faktory.Core
 
             foreach (var result in faktory.ActionResults)
             {
-                var r = result.Success ? ":check_mark_button:" : ":cross_mark:";
+                var r = result.Success ? "OK" : "FAIL";
                 table.AddRow(RowParameters(result.Name, r, result.Duration.ToString(timeFormat)));
                 duration += result.Duration;
             }
