@@ -33,6 +33,7 @@ namespace Faktory.Core
                     PrintSummary(faktory);
                 }
             });
+
         }
 
         static void PrintHeader() => AnsiConsole.MarkupLine($"{AppName.Colorify(LogColor.Yellow)} {Version.Colorify(LogColor.Green)}");
@@ -81,7 +82,7 @@ namespace Faktory.Core
 
             foreach (var result in faktory.ActionResults)
             {
-                var r = result.Success ? "OK" : "FAIL";
+                var r = result.Success ? "OK".Colorify(LogColor.Green) : "FAIL".Colorify(LogColor.Red);
                 table.AddRow(RowParameters(result.Name, r, result.Duration.ToString(timeFormat)));
                 duration += result.Duration;
             }
