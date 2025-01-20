@@ -52,6 +52,7 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="FaktoryRunner.cs" />
     <Compile Include="Helpers\AssemblyUpdater.cs" />
+    <Compile Include="Helpers\Crypto.cs" />
     <Compile Include="Helpers\IoClean.cs" />
     <Compile Include="Exceptions\MissingFaktoryException.cs" />
     <Compile Include="Exceptions\NotBootedException.cs" />

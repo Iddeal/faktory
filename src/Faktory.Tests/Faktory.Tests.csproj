@@ -50,6 +50,7 @@
     <Compile Include="FaktoryRunnerTests.cs" />
     <Compile Include="FaktoryTests.cs" />
     <Compile Include="Integration\Helpers\AssemblyUpdaterTests.cs" />
+    <Compile Include="Integration\Helpers\Crypto\CryptoTests.cs" />
     <Compile Include="Integration\Helpers\IntegrationBootUp.cs" />
     <Compile Include="Integration\Helpers\Io\CleanTests.cs" />
     <Compile Include="Integration\Helpers\Io\CopyTests.cs" />
@@ -76,5 +77,11 @@
       <Version>0.47.0</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Dummy.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
