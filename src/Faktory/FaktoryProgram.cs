@@ -19,7 +19,7 @@ namespace Faktory.Core
         {
             PrintHeader();
 
-            var args= string.Join(" ", argsArray);
+            var args = string.Join(" ", argsArray);
             AnsiConsole.Status()
                 .Start("Loading...", ctx =>
             {

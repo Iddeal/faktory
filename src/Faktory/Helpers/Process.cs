@@ -57,7 +57,11 @@ public static class Process
             
             process.WaitForExit();
 
-            if (process.ExitCode != 0 && !validExitCodes.Contains(process.ExitCode)) throw new Exception($"Process exited with code {process.ExitCode}");
+            if (process.ExitCode != 0 && !validExitCodes.Contains(process.ExitCode)) throw new InvalidExitCodeException($"Process exited with code {process.ExitCode}");
+        }
+        catch (InvalidExitCodeException)
+        {
+            throw;
         }
         catch (Exception e)
         {

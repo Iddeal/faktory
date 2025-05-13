@@ -48,6 +48,8 @@
     <Compile Include="ActionResult.cs" />
     <Compile Include="Boot.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="Exceptions\BuildFailureException.cs" />
+    <Compile Include="Exceptions\InvalidExitCodeException.cs" />
     <Compile Include="Extensions\SpectreExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="FaktoryRunner.cs" />
@@ -63,6 +65,8 @@
     <Compile Include="Helpers\IoDirectory.cs" />
     <Compile Include="Helpers\IoWriteTextFile.cs" />
     <Compile Include="Helpers\MsBuild.cs" />
+    <Compile Include="Helpers\MSpec.cs" />
+    <Compile Include="Helpers\NUnit.cs" />
     <Compile Include="Helpers\Process.cs" />
     <Compile Include="InternalUtilities\CiRunners.cs" />
     <Compile Include="InternalUtilities\Context.cs" />

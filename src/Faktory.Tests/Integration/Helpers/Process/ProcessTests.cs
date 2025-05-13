@@ -1,5 +1,6 @@
 ﻿using System;
 using Faktory.Core;
+using Faktory.Core.Exceptions;
 using NUnit.Framework;
 
 namespace Faktory.Tests.Integration.Helpers.Process
@@ -17,7 +18,7 @@ namespace Faktory.Tests.Integration.Helpers.Process
             var exception = Assert.Throws<Exception>(() => Core.Helpers.Process.Run("nada_i_dont_exist.exe"));
 
             // Assert
-            StringAssert.Contains("The system cannot find the file specified", exception.Message);
+            StringAssert.Contains("The system cannot find the file specified", exception?.Message);
         }
 
         [Test, Order(2)]
@@ -33,7 +34,7 @@ namespace Faktory.Tests.Integration.Helpers.Process
         public void Run_TestAppWithPlannedFailed_ReturnsFailure()
         {
             // Act - Run the test app
-            var exception = Assert.Throws<Exception>(() => Core.Helpers.Process.Run("ProcessTest.exe", "42"));
+            Assert.Throws<InvalidExitCodeException>(() => Core.Helpers.Process.Run("ProcessTest.exe", "42"));
         }
     }
 }
