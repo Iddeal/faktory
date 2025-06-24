@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using Faktory.Core;
+using Faktory.Core.Logging;
 using Faktory.Core.ProgressReporter;
 using NUnit.Framework;
 
@@ -24,89 +25,133 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
         {
             Config.Reset();
             FaktoryRunner.ProgressReporter = new TestProgressReporter();
+            FaktoryRunner.LogWriter = new TestLogWriter();
         }
 
         [Test, Order(1)]
         [NonParallelizable]
-        public void RunTests_CantFindNUnit_ReportsErrorWithHelp()
-        {
-            Config.Set(NUnitPath, "");
-            IProgressReporter progressReporter = new TestProgressReporter();
-            string nUnitOptions = null;
-            var inputFiles = new string[] { null };
-
-            var exception = Assert.Throws<Exception>(() => Core.Helpers.NUnit.RunTests(nUnitOptions, inputFiles));
-
-            Assert.That(exception.Message, Is.EqualTo($"Config option '{NUnitPath}' not set. Please override Configure()."));
-        }
-
-        [Test, Order(2)]
-        [NonParallelizable]
         public void Run_NoInputFiles_ReportsErrorWithHelp()
         {
             Config.Set(NUnitPath, NUnitExePath);
-            IProgressReporter progressReporter = new TestProgressReporter();
             string nUnitOptions = null;
             string[] inputFiles = null;
 
-            var exception = Assert.Throws<ArgumentNullException>(() => Core.Helpers.NUnit.RunTests(nUnitOptions, inputFiles));
+            var exception = Assert.Throws<ArgumentNullException>(() => Core.Helpers.NUnit.RunTests(inputFiles, nUnitOptions));
 
             StringAssert.Contains("inputFiles", exception.Message);
         }   
 
-        [Test, Order(3)]
+        [Test, Order(2)]
         [NonParallelizable]
         public void Run_EmptyInputFiles_ReportsErrorWithHelp()
         {
             Config.Set(NUnitPath, NUnitExePath);
-            IProgressReporter progressReporter = new TestProgressReporter();
-            string nUnitOptions = null;
+            var nUnitOptions = "";
             var inputFiles = Array.Empty<string>();
 
-            var exception = Assert.Throws<Exception>(() => Core.Helpers.NUnit.RunTests(nUnitOptions, inputFiles));
+            var exception = Assert.Throws<Exception>(() => Core.Helpers.NUnit.RunTests(inputFiles, nUnitOptions));
 
             Assert.That(exception.Message, Is.EqualTo("Empty input file(s) found."));
         }   
 
-        [Test, Order(4)]
+        [Test, Order(3)]
         [NonParallelizable]
-        public void Run_CantFindInputFiles_ReportsErrorWithHelp()
+        public void Run_EmptyStringInputFiles_ReportsErrorWithHelp()
         {
             Config.Set(NUnitPath, NUnitExePath);
-            IProgressReporter progressReporter = new TestProgressReporter();
+            var nUnitOptions = "";
+            var inputFiles = new[] { "" };
+
+            var exception = Assert.Throws<Exception>(() => Core.Helpers.NUnit.RunTests(inputFiles, nUnitOptions));
+
+            Assert.That(exception.Message, Is.EqualTo("Null or empty input files."));
+        }   
+
+        [Test, Order(4)]
+        [NonParallelizable]
+        public void Run_NullOptions_ReportsErrorWithHelp()
+        {
+            Config.Set(NUnitPath, NUnitExePath);
             string nUnitOptions = null;
             var inputFiles = new[] { "non-existent_tests.dll" };
 
-            var exception = Assert.Throws<Exception>(() => Core.Helpers.NUnit.RunTests(nUnitOptions, inputFiles));
+            var exception = Assert.Throws<ArgumentNullException>(() => Core.Helpers.NUnit.RunTests(inputFiles, nUnitOptions));
 
-            Assert.That(exception.Message, Is.EqualTo("Input file(s) not found: 'non-existent_tests.dll'"));
+            StringAssert.Contains("nUnitOptions", exception.Message);
         }   
 
         [Test, Order(5)]
         [NonParallelizable]
-        public void Run_WithArgs_Succeeds()
+        public void RunTests_CantFindNUnit_ReportsErrorWithHelp()
         {
-            Config.Set(NUnitPath, NUnitExePath);
-            IProgressReporter progressReporter = new TestProgressReporter();
-            string nUnitOptions = null;
-            var inputFiles = new[] { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestDummy.dll") };
+            Config.Set(NUnitPath, "");
+            var nUnitOptions = "";
+            var inputFiles = new string[] { null };
 
-            Assert.DoesNotThrow(() => Core.Helpers.NUnit.RunTests(null, inputFiles));
+            var exception = Assert.Throws<Exception>(() => Core.Helpers.NUnit.RunTests(inputFiles, nUnitOptions));
+
+            Assert.That(exception.Message, Is.EqualTo($"Config option '{NUnitPath}' not set. Please override Configure()."));
         }
 
         [Test, Order(6)]
         [NonParallelizable]
-        public void Run_InvalidExitCode_ReportsFailure()
+        public void Run_CantFindInputFiles_ReportsErrorWithHelp()
         {
-            Config.Set(NUnitPath, "ProcessTest.exe");
-            var progressReporter = new TestProgressReporter();
-            const int exitCode = int.MinValue;
-            var nUnitOptions = exitCode.ToString();
+            Config.Set(NUnitPath, NUnitExePath);
+            var nUnitOptions = "";
+            var inputFiles = new[] { "non-existent_tests.dll" };
+
+            var exception = Assert.Throws<Exception>(() => Core.Helpers.NUnit.RunTests(inputFiles, nUnitOptions));
+
+            Assert.That(exception.Message, Is.EqualTo("Input file(s) not found: 'non-existent_tests.dll'"));
+        }   
+
+        [Test, Order(7)]
+        [NonParallelizable]
+        public void Run_WhenToldToDiscontinueOnFailedTests_PassesCorrectArgToNUnit()
+        {
+            Config.Set(NUnitPath, NUnitExePath);
+            var nUnitOptions = "";
             var inputFiles = new[] { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestDummy.dll") };
 
-            Assert.DoesNotThrow(() => Core.Helpers.NUnit.RunTests(nUnitOptions, inputFiles));
+            Assert.DoesNotThrow(() => Core.Helpers.NUnit.RunTests(inputFiles, continueOnFailedTest: false));
+            Assert.IsTrue(((TestLogWriter)FaktoryRunner.LogWriter).AllMessages.Any(x => x.StartsWith("Running") && x.Contains("--stoponerror")));
+        }   
 
-            Assert.True(((TestProgressReporter)FaktoryRunner.ProgressReporter).AllMessages.Any(x => x.Contains(exitCode.ToString())));
+        [Test, Order(8)]
+        [NonParallelizable]
+        public void Run_WhenToldToDiscontinueOnFailedTestsAndOptionsIncludeArg_DoesNotDuplicateArgPassedToNUnit()
+        {
+            Config.Set(NUnitPath, NUnitExePath);
+            var nUnitOptions = "--stoponerror";
+            var inputFiles = new[] { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestDummy.dll") };
+
+            Assert.DoesNotThrow(() => Core.Helpers.NUnit.RunTests(inputFiles, continueOnFailedTest: false));
+            var optionCount = ((TestLogWriter)FaktoryRunner.LogWriter).AllMessages.Single(x => x.StartsWith("Running")).Split(new[] { "--stoponerror" }, StringSplitOptions.None).Length - 1;
+            Assert.AreEqual(1, optionCount);
+        }
+
+        [Test, Order(9)]
+        [NonParallelizable]
+        public void Run_WhenToldToContinueOnFailedTests_PassesCorrectArgToNUnit()
+        {
+            Config.Set(NUnitPath, NUnitExePath);
+            var nUnitOptions = "";
+            var inputFiles = new[] { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestDummy.dll") };
+
+            Assert.DoesNotThrow(() => Core.Helpers.NUnit.RunTests(inputFiles, continueOnFailedTest: true));
+            Assert.IsFalse(((TestLogWriter)FaktoryRunner.LogWriter).AllMessages.Any(x => x.StartsWith("Running") && x.Contains("--stoponerror")));
+        }   
+
+        [Test, Order(10)]
+        [NonParallelizable]
+        public void Run_WithArgs_Succeeds()
+        {
+            Config.Set(NUnitPath, NUnitExePath);
+            var nUnitOptions = "";
+            var inputFiles = new[] { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestDummy.dll") };
+
+            Assert.DoesNotThrow(() => Core.Helpers.NUnit.RunTests(inputFiles));
         }
     }
 }

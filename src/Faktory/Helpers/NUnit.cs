@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Faktory.Core.Exceptions;
@@ -10,13 +11,14 @@ namespace Faktory.Core.Helpers
     /// </summary>
     public static class NUnit
     {
+        private const int AllTestsPassedExitCode = 0;
         private const string NUnitPath = nameof(NUnitPath);
-        private static int[] _validExitCodes;
+        private const string StopOnError = " --stoponerror";
 
-        public static void RunTests(string nUnitOptions, string[] inputFiles, int[] validExitCodes = null)
+        public static void RunTests(string[] inputFiles, string nUnitOptions = "", bool continueOnFailedTest = true)
         {
             if (inputFiles == null) throw new ArgumentNullException(nameof(inputFiles));
-            _validExitCodes = validExitCodes ?? [];
+            if (nUnitOptions == null) throw new ArgumentNullException(nameof(nUnitOptions));
             if (string.IsNullOrEmpty(Config.Get(NUnitPath)))
             {
                 throw new Exception($"Config option '{NUnitPath}' not set. Please override Configure().");
@@ -29,27 +31,42 @@ namespace Faktory.Core.Helpers
 
             if (inputFiles.Any(string.IsNullOrEmpty))
             {
-                throw new Exception();
+                throw new Exception("Null or empty input files.");
             }
 
-            if (!inputFiles.Any(File.Exists))
+            var nonExistentFiles = inputFiles.Where(x => !File.Exists(x)).ToList();
+            if (nonExistentFiles.Any())
             {
                 throw new Exception(
-                    $"Input file(s) not found: '{string.Join("', '", inputFiles.Where(x => !File.Exists(x)))}'");
+                    $"Input file(s) not found: '{string.Join("', '", nonExistentFiles)}'");
+            }
+
+            var validExitCodes = new List<int> { AllTestsPassedExitCode };
+            if (continueOnFailedTest)
+            {
+                validExitCodes.AddRange(FailedTestCounts());
+            }
+            else
+            {
+                if(!nUnitOptions.Contains(StopOnError)) nUnitOptions += StopOnError;
             }
 
             foreach (var path in inputFiles)
             {
                 var arguments = $"{nUnitOptions} \"{path}\" ";
+
                 try
                 {
-                    Process.Run(Config.Get(NUnitPath), arguments, validExitCodes: _validExitCodes);
+                    Process.Run(Config.Get(NUnitPath), arguments, validExitCodes: validExitCodes.ToArray());
                 }
                 catch (InvalidExitCodeException e)
                 {
                     FaktoryRunner.ProgressReporter.ReportFailure(e.Message);
                 }
             }
+
         }
+
+        private static int[] FailedTestCounts() => Enumerable.Range(1, 100).Select(i => i).ToArray();
     }
 }
