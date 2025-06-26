@@ -35,7 +35,7 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
             string mspecOptions = null;
             var assemblies = new string[] { null };
 
-            var exception = Assert.Throws<Exception>(() => Core.Helpers.MSpec.RunTests(mspecOptions, assemblies));
+            var exception = Assert.Throws<Exception>(() => Core.Helpers.MSpec.RunTests(assemblies, mspecOptions));
 
             Assert.That(exception.Message, Is.EqualTo("Config option 'MSpecPath' not set. Please override Configure()."));
         }
@@ -48,7 +48,7 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
             string mspecOptions = null;
             string[] assemblies = null;
 
-            var exception = Assert.Throws<ArgumentNullException>(() => Core.Helpers.MSpec.RunTests(mspecOptions, assemblies));
+            var exception = Assert.Throws<ArgumentNullException>(() => Core.Helpers.MSpec.RunTests(assemblies, mspecOptions));
 
             StringAssert.Contains("assemblies", exception.Message);
         }   
@@ -61,7 +61,7 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
             string mspecOptions = null;
             var assemblies = Array.Empty<string>();
 
-            var exception = Assert.Throws<Exception>(() => Core.Helpers.MSpec.RunTests(mspecOptions, assemblies));
+            var exception = Assert.Throws<Exception>(() => Core.Helpers.MSpec.RunTests(assemblies, mspecOptions));
 
             Assert.That(exception.Message, Is.EqualTo("Empty assemblies found."));
         }   
@@ -75,7 +75,7 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
             string mspecOptions = null;
             var assemblies = new[] { nonExistentTestsDll };
 
-            var exception = Assert.Throws<Exception>(() => Core.Helpers.MSpec.RunTests(mspecOptions, assemblies));
+            var exception = Assert.Throws<Exception>(() => Core.Helpers.MSpec.RunTests(assemblies, mspecOptions));
 
             Assert.That(exception.Message, Is.EqualTo($"Assemblies not found: '{nonExistentTestsDll}'"));
         }   
@@ -87,7 +87,7 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
             Config.Set(MSpecPath, MSpecExePath);
             string mspecOptions = null;
             var assemblies = new[] { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestDummy.dll") };
-            Assert.DoesNotThrow(() => Core.Helpers.MSpec.RunTests(mspecOptions, assemblies, new []{ 0 }));
+            Assert.DoesNotThrow(() => Core.Helpers.MSpec.RunTests(assemblies, mspecOptions, new []{ 0 }));
         }
 
         [Test, Order(6)]
@@ -99,7 +99,7 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
             var mspecOptions = exitCode.ToString();
             var assemblies = new[] { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestDummy.dll") };
 
-            Assert.DoesNotThrow(() => Core.Helpers.MSpec.RunTests(mspecOptions, assemblies));
+            Assert.DoesNotThrow(() => Core.Helpers.MSpec.RunTests(assemblies, mspecOptions));
 
             Assert.True(((TestProgressReporter)FaktoryRunner.ProgressReporter).AllMessages.Any(x => x.Contains(exitCode.ToString())));
         }

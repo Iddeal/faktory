@@ -13,7 +13,7 @@ namespace Faktory.Core.Helpers
         private const string MSpecPath = nameof(MSpecPath);
         private static int[] _validExitCodes;
 
-        public static void RunTests(string mspecOptions, string[] assemblies, int[] validExitCodes = null)
+        public static void RunTests(string[] assemblies, string mspecOptions = "", int[] validExitCodes = null)
         {
             if (assemblies == null) throw new ArgumentNullException(nameof(assemblies));
             _validExitCodes = validExitCodes ?? [];
