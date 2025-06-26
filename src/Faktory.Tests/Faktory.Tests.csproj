@@ -69,7 +69,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Faktory\Faktory.Core.csproj">
       <Project>{4cb73894-ed3c-42dc-900e-9561f123d9af}</Project>
-      <Name>Faktory</Name>
+      <Name>Faktory.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -87,9 +87,13 @@
     <Content Include="Dummy.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestDummy.dll">
+    <Content Include="FailingTests.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="PassingTests.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ProcessTest.exe" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

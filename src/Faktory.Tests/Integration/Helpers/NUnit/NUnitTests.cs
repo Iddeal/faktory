@@ -112,7 +112,7 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
         {
             Config.Set(NUnitPath, NUnitExePath);
             var nUnitOptions = "";
-            var inputFiles = new[] { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestDummy.dll") };
+            var inputFiles = new[] { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "PassingTests.dll") };
 
             Assert.DoesNotThrow(() => Core.Helpers.NUnit.RunTests(inputFiles, continueOnFailedTest: false));
             Assert.IsTrue(((TestLogWriter)FaktoryRunner.LogWriter).AllMessages.Any(x => x.StartsWith("Running") && x.Contains("--stoponerror")));
@@ -124,7 +124,7 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
         {
             Config.Set(NUnitPath, NUnitExePath);
             var nUnitOptions = "--stoponerror";
-            var inputFiles = new[] { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestDummy.dll") };
+            var inputFiles = new[] { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "PassingTests.dll") };
 
             Assert.DoesNotThrow(() => Core.Helpers.NUnit.RunTests(inputFiles, continueOnFailedTest: false));
             var optionCount = ((TestLogWriter)FaktoryRunner.LogWriter).AllMessages.Single(x => x.StartsWith("Running")).Split(new[] { "--stoponerror" }, StringSplitOptions.None).Length - 1;
@@ -137,7 +137,7 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
         {
             Config.Set(NUnitPath, NUnitExePath);
             var nUnitOptions = "";
-            var inputFiles = new[] { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestDummy.dll") };
+            var inputFiles = new[] { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "PassingTests.dll") };
 
             Assert.DoesNotThrow(() => Core.Helpers.NUnit.RunTests(inputFiles, continueOnFailedTest: true));
             Assert.IsFalse(((TestLogWriter)FaktoryRunner.LogWriter).AllMessages.Any(x => x.StartsWith("Running") && x.Contains("--stoponerror")));
@@ -149,7 +149,7 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
         {
             Config.Set(NUnitPath, NUnitExePath);
             var nUnitOptions = "";
-            var inputFiles = new[] { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestDummy.dll") };
+            var inputFiles = new[] { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "PassingTests.dll") };
 
             Assert.DoesNotThrow(() => Core.Helpers.NUnit.RunTests(inputFiles));
         }

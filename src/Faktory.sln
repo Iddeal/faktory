@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessTest", "ProcessTest\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MsBuildTest", "MsBuildTest\MsBuildTest.csproj", "{69F4681A-884B-417D-8B80-4912B66E53AF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PassingTests", "PassingTests\PassingTests.csproj", "{5F821BA7-B504-4660-B886-F7D1336E4BE4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FailingTests", "FailingTests\FailingTests.csproj", "{05A10078-7FC3-4817-9B04-7C54BE8592A1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -39,6 +43,14 @@ Global
 		{69F4681A-884B-417D-8B80-4912B66E53AF}.Debug|x64.ActiveCfg = Debug|x64
 		{69F4681A-884B-417D-8B80-4912B66E53AF}.Debug|x64.Build.0 = Debug|x64
 		{69F4681A-884B-417D-8B80-4912B66E53AF}.Release|x64.ActiveCfg = Release|x64
+		{5F821BA7-B504-4660-B886-F7D1336E4BE4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5F821BA7-B504-4660-B886-F7D1336E4BE4}.Debug|x64.Build.0 = Debug|Any CPU
+		{5F821BA7-B504-4660-B886-F7D1336E4BE4}.Release|x64.ActiveCfg = Release|Any CPU
+		{5F821BA7-B504-4660-B886-F7D1336E4BE4}.Release|x64.Build.0 = Release|Any CPU
+		{05A10078-7FC3-4817-9B04-7C54BE8592A1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{05A10078-7FC3-4817-9B04-7C54BE8592A1}.Debug|x64.Build.0 = Debug|Any CPU
+		{05A10078-7FC3-4817-9B04-7C54BE8592A1}.Release|x64.ActiveCfg = Release|Any CPU
+		{05A10078-7FC3-4817-9B04-7C54BE8592A1}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
