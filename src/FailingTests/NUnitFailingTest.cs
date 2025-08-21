@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace FailingTestsTestProject
+namespace FailingTests
 {
     [TestFixture]
     public class NUnitFailingTest

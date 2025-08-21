@@ -1,6 +1,6 @@
 ﻿using Machine.Specifications;
 
-namespace FailingTestsTestProject
+namespace FailingTests
 {
     public class MSpecFailingTest
     {
