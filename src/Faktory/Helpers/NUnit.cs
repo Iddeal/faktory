@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 using Faktory.Core.Exceptions;
 
 namespace Faktory.Core.Helpers
@@ -15,7 +15,118 @@ namespace Faktory.Core.Helpers
         private const string NUnitPath = nameof(NUnitPath);
         private const string StopOnError = " --stoponerror";
 
-        public static void RunTests(string[] inputFiles, string nUnitOptions = "", bool continueOnFailedTest = true)
+        public static void RunTests(string[] assemblies, string nUnitOptions = "", bool continueOnFailedTest = false)
+        {
+            ValidateArgs(assemblies, nUnitOptions);
+
+            if(!continueOnFailedTest && !nUnitOptions.Contains(StopOnError)) nUnitOptions += StopOnError;
+
+            var ar = Faktory.CurrentActionResult;
+            var resultsPath =  Path.GetTempFileName();
+
+            foreach (var path in assemblies)
+            {
+                var arguments = $"{nUnitOptions} --result={resultsPath};format=nunit3 \"{path}\" ";
+
+                try
+                {
+                    Process.Run(Config.Get(NUnitPath), arguments, validExitCodes: AllTestsPassedExitCode);
+                }
+                catch (InvalidExitCodeException e)
+                {
+                    FaktoryRunner.ProgressReporter.ReportFailure(e.Message);
+                    ar.LastException = e;
+                }
+                finally
+                {
+                    RecordResults(ar, resultsPath);
+                    if (File.Exists(resultsPath)) File.Delete(resultsPath);
+                }
+
+                if (ar.LastException != null && !continueOnFailedTest) throw ar.LastException;
+            }
+        }
+
+        private static void RecordResults(ActionResult ar, string resultsPath)
+        {
+            try
+            {
+                var root = XDocument.Load(resultsPath).Root;
+                AddFailedTestMessages(ar, null, root, 0);
+                AddSummaryMessages(ar, root);
+            }
+            catch (Exception e)
+            {
+                ar.AddMessage("##### Error reading results #####");
+                ar.AddMessage(e.Message, 1);
+            }
+        }
+
+        private static void AddSummaryMessages(ActionResult ar, XElement root)
+        {
+            var result = root.Attribute("result").Value;
+            var total = root.Attribute("total").Value;
+            var passed = root.Attribute("passed").Value;
+            var failed = root.Attribute("failed").Value;
+            var inconclusive = root.Attribute("inconclusive").Value;
+            var skipped = root.Attribute("skipped").Value;
+
+            ar.AddMessage($"NUnit tests completed ({result})");
+            ar.AddMessage($"{total} tests");
+            ar.AddMessage($"Passed: {passed}", 1);
+            ar.AddMessage($"Failed: {failed}", 1);
+            ar.AddMessage($"Inconclusive: {inconclusive}", 1);
+            ar.AddMessage($"Skipped: {skipped}", 1);
+        }
+
+        static void AddFailedTestMessages(ActionResult ar, XElement parent, XElement element, int indent)
+        {
+            var testCases = element.Elements("test-case").Where(x => x.Attribute("result").Value != "Passed");
+            if (testCases.Any())
+            {
+                var parentName = parent.Attribute("name").Value;
+                ar.AddMessage($"- {parentName}", indent);
+            }
+
+            foreach (var testCase in testCases)
+            {
+                var name = testCase.Attribute("name").Value;
+                var status = testCase.Attribute("result").Value;
+                var message = $"- {name} ({status})";
+                ar.AddMessage(message, indent + 1);
+
+                if (status == "Skipped")
+                {
+                    foreach (var reason in testCase.Elements("reason"))
+                    {
+                        ar.AddMessage(reason.Element("message").Value.Trim(), (indent + 2) * ActionResult.IndentWidth);
+                    }
+                }
+                else
+                {
+                    var assertions = testCase
+                        .Element("assertions")
+                        .Elements("assertion");
+                    foreach (var assertion in assertions)
+                    {
+                        var xElement = assertion.Element("message");
+                        ar.AddMessage(xElement.Value.Trim(), (indent + 2) * ActionResult.IndentWidth);
+                    }
+                }
+
+                ar.AddMessage();
+            }
+
+            var testSuiteChildren = element.Elements("test-suite");
+            foreach (var testSuiteChild in testSuiteChildren)
+            {
+                if (testSuiteChild.Attribute("result").Value == "Passed") continue;
+
+                AddFailedTestMessages(ar, element, testSuiteChild, indent);
+            }
+        }
+
+        private static void ValidateArgs(string[] inputFiles, string nUnitOptions)
         {
             if (inputFiles == null) throw new ArgumentNullException(nameof(inputFiles));
             if (nUnitOptions == null) throw new ArgumentNullException(nameof(nUnitOptions));
@@ -40,33 +151,6 @@ namespace Faktory.Core.Helpers
                 throw new Exception(
                     $"Input file(s) not found: '{string.Join("', '", nonExistentFiles)}'");
             }
-
-            var validExitCodes = new List<int> { AllTestsPassedExitCode };
-            if (continueOnFailedTest)
-            {
-                validExitCodes.AddRange(FailedTestCounts());
-            }
-            else
-            {
-                if(!nUnitOptions.Contains(StopOnError)) nUnitOptions += StopOnError;
-            }
-
-            foreach (var path in inputFiles)
-            {
-                var arguments = $"{nUnitOptions} \"{path}\" ";
-
-                try
-                {
-                    Process.Run(Config.Get(NUnitPath), arguments, validExitCodes: validExitCodes.ToArray());
-                }
-                catch (InvalidExitCodeException e)
-                {
-                    FaktoryRunner.ProgressReporter.ReportFailure(e.Message);
-                }
-            }
-
         }
-
-        private static int[] FailedTestCounts() => Enumerable.Range(1, 100).Select(i => i).ToArray();
     }
 }

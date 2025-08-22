@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using Faktory.Core;
+using Faktory.Core.Exceptions;
 using Faktory.Core.Logging;
 using Faktory.Core.ProgressReporter;
 using NUnit.Framework;
@@ -17,6 +18,9 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
     [Category("Integration")]
     public class NUnitTests
     {
+        private static string TestDummyDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\", "TestDummys");
+        private static string FailingTestsPath = Path.Combine(TestDummyDir, "FailingTests.dll");
+        private static string PassingTestsPath = Path.Combine(TestDummyDir, "PassingTests.dll");
         private const string NUnitPath = nameof(NUnitPath);
         private static readonly string NUnitExePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Lib", "NUnit.ConsoleRunner", "nunit3-console.exe");
 
@@ -26,6 +30,7 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
             Config.Reset();
             FaktoryRunner.ProgressReporter = new TestProgressReporter();
             FaktoryRunner.LogWriter = new TestLogWriter();
+            Core.Faktory.CurrentActionResult = new ActionResult();
         }
 
         [Test, Order(1)]
@@ -112,11 +117,12 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
         {
             Config.Set(NUnitPath, NUnitExePath);
             var nUnitOptions = "";
-            var inputFiles = new[] { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "PassingTests.dll") };
+            var inputFiles = new[] { FailingTestsPath };
 
-            Assert.DoesNotThrow(() => Core.Helpers.NUnit.RunTests(inputFiles, continueOnFailedTest: false));
+            Assert.Throws<InvalidExitCodeException>(() => Core.Helpers.NUnit.RunTests(inputFiles, continueOnFailedTest: false));
+
             Assert.IsTrue(((TestLogWriter)FaktoryRunner.LogWriter).AllMessages.Any(x => x.StartsWith("Running") && x.Contains("--stoponerror")));
-        }   
+        }
 
         [Test, Order(8)]
         [NonParallelizable]
@@ -124,34 +130,82 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
         {
             Config.Set(NUnitPath, NUnitExePath);
             var nUnitOptions = "--stoponerror";
-            var inputFiles = new[] { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "PassingTests.dll") };
+            var inputFiles = new[] { FailingTestsPath };
 
-            Assert.DoesNotThrow(() => Core.Helpers.NUnit.RunTests(inputFiles, continueOnFailedTest: false));
-            var optionCount = ((TestLogWriter)FaktoryRunner.LogWriter).AllMessages.Single(x => x.StartsWith("Running")).Split(new[] { "--stoponerror" }, StringSplitOptions.None).Length - 1;
+            Assert.Throws<InvalidExitCodeException>(() => Core.Helpers.NUnit.RunTests(inputFiles, continueOnFailedTest: false));
+
+            var optionCount = ((TestLogWriter)FaktoryRunner.LogWriter).AllMessages.Single(x => x.StartsWith("Running"))
+                .Split(new[] { "--stoponerror" }, StringSplitOptions.None).Length - 1;
             Assert.AreEqual(1, optionCount);
         }
 
         [Test, Order(9)]
         [NonParallelizable]
+        public void Run_WhenToldToDiscontinueOnFailedTests_ThrowsOnFailedTest()
+        {
+            Config.Set(NUnitPath, NUnitExePath);
+            var inputFiles = new[] { FailingTestsPath };
+
+            Assert.Throws<InvalidExitCodeException>(() => Core.Helpers.NUnit.RunTests(inputFiles, continueOnFailedTest: false));
+        }
+
+        [Test, Order(10)]
+        [NonParallelizable]
         public void Run_WhenToldToContinueOnFailedTests_PassesCorrectArgToNUnit()
         {
             Config.Set(NUnitPath, NUnitExePath);
             var nUnitOptions = "";
-            var inputFiles = new[] { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "PassingTests.dll") };
+            var inputFiles = new[] { FailingTestsPath };
 
-            Assert.DoesNotThrow(() => Core.Helpers.NUnit.RunTests(inputFiles, continueOnFailedTest: true));
+            Core.Helpers.NUnit.RunTests(inputFiles, continueOnFailedTest: true);
+
             Assert.IsFalse(((TestLogWriter)FaktoryRunner.LogWriter).AllMessages.Any(x => x.StartsWith("Running") && x.Contains("--stoponerror")));
         }   
 
-        [Test, Order(10)]
+        [Test, Order(11)]
+        [NonParallelizable]
+        public void Run_WhenToldToContinueOnFailedTests_DoesNotThrowOnFailure()
+        {
+            Config.Set(NUnitPath, NUnitExePath);
+            var nUnitOptions = "";
+            var inputFiles = new[] { FailingTestsPath };
+
+            Assert.DoesNotThrow(() =>  Core.Helpers.NUnit.RunTests(inputFiles, continueOnFailedTest: true));
+        }   
+
+        [Test, Order(12)]
         [NonParallelizable]
         public void Run_WithArgs_Succeeds()
         {
             Config.Set(NUnitPath, NUnitExePath);
             var nUnitOptions = "";
-            var inputFiles = new[] { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "PassingTests.dll") };
+            var inputFiles = new[] { PassingTestsPath };
 
             Assert.DoesNotThrow(() => Core.Helpers.NUnit.RunTests(inputFiles));
+        }
+
+        [Test, Order(13)]
+        [NonParallelizable]
+        public void Run_WhenTestsPass_RecordsPassingMessageOnTheActionResult()
+        {
+            Config.Set(NUnitPath, NUnitExePath);
+            var inputFiles = new[] { PassingTestsPath };
+
+            Core.Helpers.NUnit.RunTests(inputFiles, continueOnFailedTest: true);
+
+            CollectionAssert.Contains(Core.Faktory.CurrentActionResult.Messages, "NUnit tests completed (Passed)");
+        }
+
+        [Test, Order(14)]
+        [NonParallelizable]
+        public void Run_WhenTestsFail_RecordsFailingMessageOnTheActionResult()
+        {
+            Config.Set(NUnitPath, NUnitExePath);
+            var inputFiles = new[] { FailingTestsPath };
+
+            Core.Helpers.NUnit.RunTests(inputFiles, continueOnFailedTest: true);
+
+            CollectionAssert.Contains(Core.Faktory.CurrentActionResult.Messages, "NUnit tests completed (Failed)");
         }
     }
 }

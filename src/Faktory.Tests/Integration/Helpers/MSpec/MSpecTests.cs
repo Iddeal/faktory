@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using Faktory.Core;
+using Faktory.Core.Exceptions;
 using Faktory.Core.ProgressReporter;
 using NUnit.Framework;
 
@@ -17,6 +17,9 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
     [Category("Integration")]
     public class MSpecTests
     {
+        private static string TestDummyDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\", "TestDummys");
+        private static string FailingTestsPath = Path.Combine(TestDummyDir, "FailingTests.dll");
+        private static string PassingTestsPath = Path.Combine(TestDummyDir, "PassingTests.dll");
         private const string MSpecPath = nameof(MSpecPath);
         private static readonly string MSpecExePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Lib", "Machine.Specifications.Runner.Console", "mspec-clr4.exe");
 
@@ -25,6 +28,7 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
         {
             Config.Reset();
             FaktoryRunner.ProgressReporter = new TestProgressReporter();
+            Core.Faktory.CurrentActionResult = new ActionResult();
         }
 
         [Test, Order(1)]
@@ -86,22 +90,64 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
         {
             Config.Set(MSpecPath, MSpecExePath);
             string mspecOptions = null;
-            var assemblies = new[] { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestDummy.dll") };
-            Assert.DoesNotThrow(() => Core.Helpers.MSpec.RunTests(assemblies, mspecOptions, new []{ 0 }));
+            var assemblies = new[] { PassingTestsPath };
+
+            Assert.DoesNotThrow(() => Core.Helpers.MSpec.RunTests(assemblies, mspecOptions));
         }
 
         [Test, Order(6)]
         [NonParallelizable]
-        public void Run_InvalidExitCode_ReportsFailure()
+        public void Run_CompletedTests_RecordsTestsCompletedMessage()
         {
-            Config.Set(MSpecPath, "ProcessTest.exe");
-            const int exitCode = int.MinValue;
-            var mspecOptions = exitCode.ToString();
-            var assemblies = new[] { Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestDummy.dll") };
+            Config.Set(MSpecPath, MSpecExePath);
+            string mspecOptions = null;
+            var assemblies = new[] { PassingTestsPath };
 
             Assert.DoesNotThrow(() => Core.Helpers.MSpec.RunTests(assemblies, mspecOptions));
+        }
 
-            Assert.True(((TestProgressReporter)FaktoryRunner.ProgressReporter).AllMessages.Any(x => x.Contains(exitCode.ToString())));
+        [Test, Order(7)]
+        [NonParallelizable]
+        public void Run_ContinueOnFailure_DoesNotThrowOnFaillure()
+        {
+            Config.Set(MSpecPath, MSpecExePath);
+            var assemblies = new[] { FailingTestsPath };
+
+            Assert.DoesNotThrow(() => Core.Helpers.MSpec.RunTests(assemblies, continueOnFailedTest: true));
+        }
+
+        [Test, Order(8)]
+        [NonParallelizable]
+        public void Run_WhenToldToNotContinueOnFailure_DoesThrowOnFaillure()
+        {
+            Config.Set(MSpecPath, MSpecExePath);
+            var assemblies = new[] { FailingTestsPath };
+
+            Assert.Throws<InvalidExitCodeException>(() => Core.Helpers.MSpec.RunTests(assemblies, continueOnFailedTest: false));
+        }
+
+        [Test, Order(9)]
+        [NonParallelizable]
+        public void Run_WhenTestsPass_RecordsPassingMessageOnTheActionResult()
+        {
+            Config.Set(MSpecPath, MSpecExePath);
+            var assemblies = new[] { PassingTestsPath };
+
+            Core.Helpers.MSpec.RunTests(assemblies, continueOnFailedTest: true);
+
+            CollectionAssert.Contains(Core.Faktory.CurrentActionResult.Messages, "MSpec tests completed (Passed)");
+        }
+
+        [Test, Order(9)]
+        [NonParallelizable]
+        public void Run_WhenTestsFail_RecordsFailingMessageOnTheActionResult()
+        {
+            Config.Set(MSpecPath, MSpecExePath);
+            var assemblies = new[] { FailingTestsPath };
+
+            Core.Helpers.MSpec.RunTests(assemblies, continueOnFailedTest: true);
+
+            CollectionAssert.Contains(Core.Faktory.CurrentActionResult.Messages, "MSpec tests completed (Failed)");
         }
     }
 }

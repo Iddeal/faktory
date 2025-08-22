@@ -30,6 +30,7 @@ namespace Faktory.Core
                 var faktory = BuildCustomFaktory(updateStatus);
                 if (FaktoryRunner.Run(faktory))
                 {
+                    PrintActionResultMessages(faktory);
                     PrintSummary(faktory);
                 }
             });
@@ -73,11 +74,31 @@ namespace Faktory.Core
             }
         }
 
+        static void PrintActionResultMessages(Faktory faktory)
+        {
+            var groupings = faktory.ActionResults.ToDictionary(x => x, x => x.Messages);
+            if (groupings.Any())
+            {
+                foreach (var grouping in groupings)
+                {
+                    if (!grouping.Value.Any()) continue;
+
+                    AnsiConsole.WriteLine();
+                    var text = new Text(string.Join(Environment.NewLine, grouping.Value));
+                    var panel = new Panel(text)
+                        .Header($"{grouping.Key.Name} Messages")
+                        .RoundedBorder()
+                        .BorderColor(Color.Green);
+                    AnsiConsole.Write(panel);
+                }
+            }
+        }
+
         static void PrintSummary(Faktory faktory)
         {
             var table = new Table();
             table.AddColumns("Task", "Result", "Duration");
-            var duration = new TimeSpan();
+            var duration = TimeSpan.Zero;
             const string timeFormat = @"hh\:mm\:ss\:fff";
 
             foreach (var result in faktory.ActionResults)
