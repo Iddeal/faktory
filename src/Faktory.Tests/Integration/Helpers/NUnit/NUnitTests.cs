@@ -18,6 +18,7 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
     [Category("Integration")]
     public class NUnitTests
     {
+        private string _outputDirectory;
         private static string TestDummyDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\", "TestDummys");
         private static string FailingTestsPath = Path.Combine(TestDummyDir, "FailingTests.dll");
         private static string PassingTestsPath = Path.Combine(TestDummyDir, "PassingTests.dll");
@@ -31,6 +32,13 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
             FaktoryRunner.ProgressReporter = new TestProgressReporter();
             FaktoryRunner.LogWriter = new TestLogWriter();
             Core.Faktory.CurrentActionResult = new ActionResult();
+            _outputDirectory = Path.GetTempPath();
+        }
+
+        [TearDown]
+        public void Cleanup()
+        {
+            Directory.Delete(_outputDirectory, true);
         }
 
         [Test, Order(1)]
@@ -41,7 +49,7 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
             string nUnitOptions = null;
             string[] inputFiles = null;
 
-            var exception = Assert.Throws<ArgumentNullException>(() => Core.Helpers.NUnit.RunTests(inputFiles, nUnitOptions));
+            var exception = Assert.Throws<ArgumentNullException>(() => Core.Helpers.NUnit.RunTests(inputFiles, _outputDirectory, nUnitOptions));
 
             StringAssert.Contains("inputFiles", exception.Message);
         }   
@@ -54,7 +62,7 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
             var nUnitOptions = "";
             var inputFiles = Array.Empty<string>();
 
-            var exception = Assert.Throws<Exception>(() => Core.Helpers.NUnit.RunTests(inputFiles, nUnitOptions));
+            var exception = Assert.Throws<Exception>(() => Core.Helpers.NUnit.RunTests(inputFiles, _outputDirectory, nUnitOptions));
 
             Assert.That(exception.Message, Is.EqualTo("Empty input file(s) found."));
         }   
@@ -67,7 +75,7 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
             var nUnitOptions = "";
             var inputFiles = new[] { "" };
 
-            var exception = Assert.Throws<Exception>(() => Core.Helpers.NUnit.RunTests(inputFiles, nUnitOptions));
+            var exception = Assert.Throws<Exception>(() => Core.Helpers.NUnit.RunTests(inputFiles, _outputDirectory, nUnitOptions));
 
             Assert.That(exception.Message, Is.EqualTo("Null or empty input files."));
         }   
@@ -80,7 +88,7 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
             string nUnitOptions = null;
             var inputFiles = new[] { "non-existent_tests.dll" };
 
-            var exception = Assert.Throws<ArgumentNullException>(() => Core.Helpers.NUnit.RunTests(inputFiles, nUnitOptions));
+            var exception = Assert.Throws<ArgumentNullException>(() => Core.Helpers.NUnit.RunTests(inputFiles, _outputDirectory, nUnitOptions));
 
             StringAssert.Contains("nUnitOptions", exception.Message);
         }   
@@ -93,7 +101,7 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
             var nUnitOptions = "";
             var inputFiles = new string[] { null };
 
-            var exception = Assert.Throws<Exception>(() => Core.Helpers.NUnit.RunTests(inputFiles, nUnitOptions));
+            var exception = Assert.Throws<Exception>(() => Core.Helpers.NUnit.RunTests(inputFiles, _outputDirectory, nUnitOptions));
 
             Assert.That(exception.Message, Is.EqualTo($"Config option '{NUnitPath}' not set. Please override Configure()."));
         }
@@ -106,7 +114,7 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
             var nUnitOptions = "";
             var inputFiles = new[] { "non-existent_tests.dll" };
 
-            var exception = Assert.Throws<Exception>(() => Core.Helpers.NUnit.RunTests(inputFiles, nUnitOptions));
+            var exception = Assert.Throws<Exception>(() => Core.Helpers.NUnit.RunTests(inputFiles, _outputDirectory, nUnitOptions));
 
             Assert.That(exception.Message, Is.EqualTo("Input file(s) not found: 'non-existent_tests.dll'"));
         }   
@@ -119,7 +127,7 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
             var nUnitOptions = "";
             var inputFiles = new[] { FailingTestsPath };
 
-            Assert.Throws<InvalidExitCodeException>(() => Core.Helpers.NUnit.RunTests(inputFiles, continueOnFailedTest: false));
+            Assert.Throws<InvalidExitCodeException>(() => Core.Helpers.NUnit.RunTests(inputFiles, _outputDirectory, continueOnFailedTest: false));
 
             Assert.IsTrue(((TestLogWriter)FaktoryRunner.LogWriter).AllMessages.Any(x => x.StartsWith("Running") && x.Contains("--stoponerror")));
         }
@@ -132,7 +140,7 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
             var nUnitOptions = "--stoponerror";
             var inputFiles = new[] { FailingTestsPath };
 
-            Assert.Throws<InvalidExitCodeException>(() => Core.Helpers.NUnit.RunTests(inputFiles, continueOnFailedTest: false));
+            Assert.Throws<InvalidExitCodeException>(() => Core.Helpers.NUnit.RunTests(inputFiles, _outputDirectory, continueOnFailedTest: false));
 
             var optionCount = ((TestLogWriter)FaktoryRunner.LogWriter).AllMessages.Single(x => x.StartsWith("Running"))
                 .Split(new[] { "--stoponerror" }, StringSplitOptions.None).Length - 1;
@@ -146,7 +154,7 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
             Config.Set(NUnitPath, NUnitExePath);
             var inputFiles = new[] { FailingTestsPath };
 
-            Assert.Throws<InvalidExitCodeException>(() => Core.Helpers.NUnit.RunTests(inputFiles, continueOnFailedTest: false));
+            Assert.Throws<InvalidExitCodeException>(() => Core.Helpers.NUnit.RunTests(inputFiles, _outputDirectory, continueOnFailedTest: false));
         }
 
         [Test, Order(10)]
@@ -157,7 +165,7 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
             var nUnitOptions = "";
             var inputFiles = new[] { FailingTestsPath };
 
-            Core.Helpers.NUnit.RunTests(inputFiles, continueOnFailedTest: true);
+            Core.Helpers.NUnit.RunTests(inputFiles, _outputDirectory, continueOnFailedTest: true);
 
             Assert.IsFalse(((TestLogWriter)FaktoryRunner.LogWriter).AllMessages.Any(x => x.StartsWith("Running") && x.Contains("--stoponerror")));
         }   
@@ -170,7 +178,7 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
             var nUnitOptions = "";
             var inputFiles = new[] { FailingTestsPath };
 
-            Assert.DoesNotThrow(() =>  Core.Helpers.NUnit.RunTests(inputFiles, continueOnFailedTest: true));
+            Assert.DoesNotThrow(() =>  Core.Helpers.NUnit.RunTests(inputFiles, _outputDirectory, continueOnFailedTest: true));
         }   
 
         [Test, Order(12)]
@@ -181,7 +189,7 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
             var nUnitOptions = "";
             var inputFiles = new[] { PassingTestsPath };
 
-            Assert.DoesNotThrow(() => Core.Helpers.NUnit.RunTests(inputFiles));
+            Assert.DoesNotThrow(() => Core.Helpers.NUnit.RunTests(inputFiles, _outputDirectory));
         }
 
         [Test, Order(13)]
@@ -191,7 +199,7 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
             Config.Set(NUnitPath, NUnitExePath);
             var inputFiles = new[] { PassingTestsPath };
 
-            Core.Helpers.NUnit.RunTests(inputFiles, continueOnFailedTest: true);
+            Core.Helpers.NUnit.RunTests(inputFiles, _outputDirectory, continueOnFailedTest: true);
 
             CollectionAssert.Contains(Core.Faktory.CurrentActionResult.Messages, "NUnit tests completed (Passed)");
         }
@@ -203,7 +211,7 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
             Config.Set(NUnitPath, NUnitExePath);
             var inputFiles = new[] { FailingTestsPath };
 
-            Core.Helpers.NUnit.RunTests(inputFiles, continueOnFailedTest: true);
+            Core.Helpers.NUnit.RunTests(inputFiles, _outputDirectory, continueOnFailedTest: true);
 
             CollectionAssert.Contains(Core.Faktory.CurrentActionResult.Messages, "NUnit tests completed (Failed)");
         }

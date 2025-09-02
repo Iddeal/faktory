@@ -13,14 +13,19 @@ namespace Faktory.Core.Helpers
     {
         private const string MSpecPath = nameof(MSpecPath);
 
-        public static void RunTests(string[] assemblies, string mspecOptions = "", bool continueOnFailedTest = false)
+        public static void RunTests(string[] assemblies, string outputDirectory, string mspecOptions = "", bool continueOnFailedTest = false)
         {
             ValidateArgs(assemblies);
 
             var ar = Faktory.CurrentActionResult;
             foreach (var path in assemblies)
             {
-                var resultsPath =  Path.GetTempFileName();
+                var resultsPath = Path.Combine(outputDirectory, "TestOutput", "MSpecResults.xml");
+
+                if (!Directory.Exists(resultsPath))
+                {
+                    Directory.CreateDirectory(resultsPath);
+                }
                 var arguments = $"{mspecOptions} \"{path}\" --xml \"{resultsPath}\" --silent";
                 try
                 {
@@ -34,7 +39,6 @@ namespace Faktory.Core.Helpers
                 finally
                 {
                     RecordResults(ar, resultsPath);
-                    if (File.Exists(resultsPath)) File.Delete(resultsPath);
                 }
 
                 if (ar.LastException != null && !continueOnFailedTest) throw ar.LastException;

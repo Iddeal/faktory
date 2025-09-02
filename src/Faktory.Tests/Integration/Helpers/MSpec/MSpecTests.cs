@@ -17,6 +17,7 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
     [Category("Integration")]
     public class MSpecTests
     {
+        private string _outputDirectory;
         private static string TestDummyDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\", "TestDummys");
         private static string FailingTestsPath = Path.Combine(TestDummyDir, "FailingTests.dll");
         private static string PassingTestsPath = Path.Combine(TestDummyDir, "PassingTests.dll");
@@ -29,6 +30,13 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
             Config.Reset();
             FaktoryRunner.ProgressReporter = new TestProgressReporter();
             Core.Faktory.CurrentActionResult = new ActionResult();
+            _outputDirectory = Path.GetTempPath();
+        }
+
+        [TearDown]
+        public void Cleanup()
+        {
+            Directory.Delete(_outputDirectory, true);
         }
 
         [Test, Order(1)]
@@ -39,7 +47,7 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
             string mspecOptions = null;
             var assemblies = new string[] { null };
 
-            var exception = Assert.Throws<Exception>(() => Core.Helpers.MSpec.RunTests(assemblies, mspecOptions));
+            var exception = Assert.Throws<Exception>(() => Core.Helpers.MSpec.RunTests(assemblies, _outputDirectory, mspecOptions));
 
             Assert.That(exception.Message, Is.EqualTo("Config option 'MSpecPath' not set. Please override Configure()."));
         }
@@ -52,7 +60,7 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
             string mspecOptions = null;
             string[] assemblies = null;
 
-            var exception = Assert.Throws<ArgumentNullException>(() => Core.Helpers.MSpec.RunTests(assemblies, mspecOptions));
+            var exception = Assert.Throws<ArgumentNullException>(() => Core.Helpers.MSpec.RunTests(assemblies, _outputDirectory, mspecOptions));
 
             StringAssert.Contains("assemblies", exception.Message);
         }   
@@ -65,7 +73,7 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
             string mspecOptions = null;
             var assemblies = Array.Empty<string>();
 
-            var exception = Assert.Throws<Exception>(() => Core.Helpers.MSpec.RunTests(assemblies, mspecOptions));
+            var exception = Assert.Throws<Exception>(() => Core.Helpers.MSpec.RunTests(assemblies, _outputDirectory, mspecOptions));
 
             Assert.That(exception.Message, Is.EqualTo("Empty assemblies found."));
         }   
@@ -79,7 +87,7 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
             string mspecOptions = null;
             var assemblies = new[] { nonExistentTestsDll };
 
-            var exception = Assert.Throws<Exception>(() => Core.Helpers.MSpec.RunTests(assemblies, mspecOptions));
+            var exception = Assert.Throws<Exception>(() => Core.Helpers.MSpec.RunTests(assemblies, _outputDirectory, mspecOptions));
 
             Assert.That(exception.Message, Is.EqualTo($"Assemblies not found: '{nonExistentTestsDll}'"));
         }   
@@ -92,7 +100,7 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
             string mspecOptions = null;
             var assemblies = new[] { PassingTestsPath };
 
-            Assert.DoesNotThrow(() => Core.Helpers.MSpec.RunTests(assemblies, mspecOptions));
+            Assert.DoesNotThrow(() => Core.Helpers.MSpec.RunTests(assemblies, _outputDirectory, mspecOptions));
         }
 
         [Test, Order(6)]
@@ -103,7 +111,7 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
             string mspecOptions = null;
             var assemblies = new[] { PassingTestsPath };
 
-            Assert.DoesNotThrow(() => Core.Helpers.MSpec.RunTests(assemblies, mspecOptions));
+            Assert.DoesNotThrow(() => Core.Helpers.MSpec.RunTests(assemblies, _outputDirectory, mspecOptions));
         }
 
         [Test, Order(7)]
@@ -113,7 +121,7 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
             Config.Set(MSpecPath, MSpecExePath);
             var assemblies = new[] { FailingTestsPath };
 
-            Assert.DoesNotThrow(() => Core.Helpers.MSpec.RunTests(assemblies, continueOnFailedTest: true));
+            Assert.DoesNotThrow(() => Core.Helpers.MSpec.RunTests(assemblies, _outputDirectory, continueOnFailedTest: true));
         }
 
         [Test, Order(8)]
@@ -123,7 +131,7 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
             Config.Set(MSpecPath, MSpecExePath);
             var assemblies = new[] { FailingTestsPath };
 
-            Assert.Throws<InvalidExitCodeException>(() => Core.Helpers.MSpec.RunTests(assemblies, continueOnFailedTest: false));
+            Assert.Throws<InvalidExitCodeException>(() => Core.Helpers.MSpec.RunTests(assemblies, _outputDirectory, continueOnFailedTest: false));
         }
 
         [Test, Order(9)]
@@ -133,7 +141,7 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
             Config.Set(MSpecPath, MSpecExePath);
             var assemblies = new[] { PassingTestsPath };
 
-            Core.Helpers.MSpec.RunTests(assemblies, continueOnFailedTest: true);
+            Core.Helpers.MSpec.RunTests(assemblies, _outputDirectory, continueOnFailedTest: true);
 
             CollectionAssert.Contains(Core.Faktory.CurrentActionResult.Messages, "MSpec tests completed (Passed)");
         }
@@ -145,7 +153,7 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
             Config.Set(MSpecPath, MSpecExePath);
             var assemblies = new[] { FailingTestsPath };
 
-            Core.Helpers.MSpec.RunTests(assemblies, continueOnFailedTest: true);
+            Core.Helpers.MSpec.RunTests(assemblies, _outputDirectory, continueOnFailedTest: true);
 
             CollectionAssert.Contains(Core.Faktory.CurrentActionResult.Messages, "MSpec tests completed (Failed)");
         }

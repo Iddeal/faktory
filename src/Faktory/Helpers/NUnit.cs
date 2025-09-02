@@ -15,14 +15,20 @@ namespace Faktory.Core.Helpers
         private const string NUnitPath = nameof(NUnitPath);
         private const string StopOnError = " --stoponerror";
 
-        public static void RunTests(string[] assemblies, string nUnitOptions = "", bool continueOnFailedTest = false)
+        public static void RunTests(string[] assemblies, string outputDirectory, string nUnitOptions = "", bool continueOnFailedTest = false)
         {
             ValidateArgs(assemblies, nUnitOptions);
 
             if(!continueOnFailedTest && !nUnitOptions.Contains(StopOnError)) nUnitOptions += StopOnError;
 
             var ar = Faktory.CurrentActionResult;
-            var resultsPath =  Path.GetTempFileName();
+            var outputDirectoryPath = Path.Combine(outputDirectory, "TestOutput");
+            var resultsPath = Path.Combine(outputDirectoryPath, "NUnitResults.xml");
+
+            if (!Directory.Exists(resultsPath))
+            {
+                Directory.CreateDirectory(resultsPath);
+            }
 
             foreach (var path in assemblies)
             {
@@ -40,7 +46,6 @@ namespace Faktory.Core.Helpers
                 finally
                 {
                     RecordResults(ar, resultsPath);
-                    if (File.Exists(resultsPath)) File.Delete(resultsPath);
                 }
 
                 if (ar.LastException != null && !continueOnFailedTest) throw ar.LastException;
@@ -99,18 +104,32 @@ namespace Faktory.Core.Helpers
                 {
                     foreach (var reason in testCase.Elements("reason"))
                     {
-                        ar.AddMessage(reason.Element("message").Value.Trim(), (indent + 2) * ActionResult.IndentWidth);
+                        var reasonMessage = reason.Element("message").Value.Trim()
+                            .Replace("\n", $"\n{new string(' ', (indent + 2) * ActionResult.IndentWidth)}");
+                        ar.AddMessage(reasonMessage, indent + 2);
                     }
                 }
                 else
                 {
                     var assertions = testCase
-                        .Element("assertions")
+                        .Element("assertions")?
                         .Elements("assertion");
-                    foreach (var assertion in assertions)
+                    if (assertions != null)
                     {
-                        var xElement = assertion.Element("message");
-                        ar.AddMessage(xElement.Value.Trim(), (indent + 2) * ActionResult.IndentWidth);
+                        foreach (var assertion in assertions)
+                        {
+                            var replaceMessage = assertion.Element("message").Value.Trim()
+                                .Replace("\n", $"\n{new string(' ', (indent + 2) * ActionResult.IndentWidth)}");
+                            ar.AddMessage(replaceMessage, indent + 2);
+                        }
+                    }
+
+                    var failure = testCase.Element("failure");
+                    if (failure != null)
+                    {
+                        var failureMessage = failure.Element("message").Value.Trim()
+                                .Replace("\n", $"\n{new string(' ', (indent + 2) * ActionResult.IndentWidth)}");
+                        ar.AddMessage(failureMessage, indent + 2);
                     }
                 }
 
