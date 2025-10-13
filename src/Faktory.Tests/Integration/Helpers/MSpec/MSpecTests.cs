@@ -30,7 +30,8 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
             Config.Reset();
             FaktoryRunner.ProgressReporter = new TestProgressReporter();
             Core.Faktory.CurrentActionResult = new ActionResult();
-            _outputDirectory = Path.GetTempPath();
+            _outputDirectory = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(Path.GetTempFileName()));
+            Directory.CreateDirectory(_outputDirectory);
         }
 
         [TearDown]

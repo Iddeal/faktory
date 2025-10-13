@@ -32,7 +32,8 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
             FaktoryRunner.ProgressReporter = new TestProgressReporter();
             FaktoryRunner.LogWriter = new TestLogWriter();
             Core.Faktory.CurrentActionResult = new ActionResult();
-            _outputDirectory = Path.GetTempPath();
+            _outputDirectory = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(Path.GetTempFileName()));
+            Directory.CreateDirectory(_outputDirectory);
         }
 
         [TearDown]
