@@ -18,14 +18,15 @@ namespace Faktory.Core.Helpers
             ValidateArgs(assemblies);
 
             var ar = Faktory.CurrentActionResult;
+            var outputDirectoryPath = Path.Combine(outputDirectory, "TestOutput");
+            var resultsPath = Path.Combine(outputDirectoryPath, "MSpecResults.xml");
+            if (!Directory.Exists(outputDirectoryPath))
+            {
+                Directory.CreateDirectory(outputDirectoryPath);
+            }
+
             foreach (var path in assemblies)
             {
-                var resultsPath = Path.Combine(outputDirectory, "TestOutput", "MSpecResults.xml");
-
-                if (!Directory.Exists(resultsPath))
-                {
-                    Directory.CreateDirectory(resultsPath);
-                }
                 var arguments = $"{mspecOptions} \"{path}\" --xml \"{resultsPath}\" --silent";
                 try
                 {

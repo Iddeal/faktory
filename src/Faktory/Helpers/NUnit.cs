@@ -25,9 +25,9 @@ namespace Faktory.Core.Helpers
             var outputDirectoryPath = Path.Combine(outputDirectory, "TestOutput");
             var resultsPath = Path.Combine(outputDirectoryPath, "NUnitResults.xml");
 
-            if (!Directory.Exists(resultsPath))
+            if (!Directory.Exists(outputDirectoryPath))
             {
-                Directory.CreateDirectory(resultsPath);
+                Directory.CreateDirectory(outputDirectoryPath);
             }
 
             foreach (var path in assemblies)
