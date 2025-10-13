@@ -136,6 +136,7 @@ namespace Faktory.Core.Helpers
                 ar.AddMessage();
                 ar.AddMessage("##### Error reading results #####");
                 ar.AddMessage(e.Message, 1);
+                ar.AddMessage(e.StackTrace, 2);
             }
         }
 
