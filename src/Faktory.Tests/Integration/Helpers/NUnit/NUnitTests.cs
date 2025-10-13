@@ -211,7 +211,7 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
             Config.Set(NUnitPath, NUnitExePath);
             var inputFiles = new[] { FailingTestsPath };
 
-            Core.Helpers.NUnit.RunTests(inputFiles, _outputDirectory, continueOnFailedTest: true);
+            Core.Helpers.NUnit.RunTests(inputFiles, _outputDirectory, "--x86", continueOnFailedTest: true);
 
             CollectionAssert.Contains(Core.Faktory.CurrentActionResult.Messages, "NUnit tests completed (Failed)");
         }
