@@ -17,7 +17,7 @@ namespace Faktory.Core.Helpers
 
         public static void RunTests(string[] assemblies, string outputDirectory, string nUnitOptions = "", bool continueOnFailedTest = false)
         {
-            ValidateArgs(assemblies, nUnitOptions);
+            ValidateArgs(assemblies);
 
             if(!continueOnFailedTest && !nUnitOptions.Contains(StopOnError)) nUnitOptions += StopOnError;
 
@@ -146,10 +146,9 @@ namespace Faktory.Core.Helpers
             }
         }
 
-        private static void ValidateArgs(string[] inputFiles, string nUnitOptions)
+        private static void ValidateArgs(string[] inputFiles)
         {
             if (inputFiles == null) throw new ArgumentNullException(nameof(inputFiles));
-            if (nUnitOptions == null) throw new ArgumentNullException(nameof(nUnitOptions));
             if (string.IsNullOrEmpty(Config.Get(NUnitPath)))
             {
                 throw new Exception($"Config option '{NUnitPath}' not set. Please override Configure().");
