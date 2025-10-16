@@ -13,7 +13,7 @@ namespace Faktory.Core.Helpers
     {
         private const string MSpecPath = nameof(MSpecPath);
 
-        public static void RunTests(string[] assemblies, string outputDirectory, string mspecOptions = "", bool continueOnFailedTest = false)
+        public static void RunTests(string[] assemblies, string outputDirectory, string options = "", bool continueOnFailedTest = false)
         {
             ValidateArgs(assemblies);
 
@@ -27,7 +27,7 @@ namespace Faktory.Core.Helpers
 
             foreach (var path in assemblies)
             {
-                var arguments = $"{mspecOptions} \"{path}\" --xml \"{resultsPath}\" --silent";
+                var arguments = $"{options} \"{path}\" --xml \"{resultsPath}\" --silent";
                 try
                 {
                     Process.Run(Config.Get(MSpecPath), arguments, validExitCodes: 0);

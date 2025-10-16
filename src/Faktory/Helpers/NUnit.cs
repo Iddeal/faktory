@@ -15,11 +15,11 @@ namespace Faktory.Core.Helpers
         private const string NUnitPath = nameof(NUnitPath);
         private const string StopOnError = " --stoponerror";
 
-        public static void RunTests(string[] assemblies, string outputDirectory, string nUnitOptions = "", bool continueOnFailedTest = false)
+        public static void RunTests(string[] assemblies, string outputDirectory, string options = "", bool continueOnFailedTest = false)
         {
             ValidateArgs(assemblies);
 
-            if(!continueOnFailedTest && !nUnitOptions.Contains(StopOnError)) nUnitOptions += StopOnError;
+            if(!continueOnFailedTest && !options.Contains(StopOnError)) options += StopOnError;
 
             var ar = Faktory.CurrentActionResult;
             var outputDirectoryPath = Path.Combine(outputDirectory, "TestOutput");
@@ -32,7 +32,7 @@ namespace Faktory.Core.Helpers
 
             foreach (var path in assemblies)
             {
-                var arguments = $"{nUnitOptions} --result={resultsPath};format=nunit3 \"{path}\" ";
+                var arguments = $"{options} --result={resultsPath};format=nunit3 \"{path}\" ";
 
                 try
                 {
