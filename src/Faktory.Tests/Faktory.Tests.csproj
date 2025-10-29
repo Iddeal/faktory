@@ -90,12 +90,6 @@
     <Content Include="Dummy.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="TestDummys\FailingTests.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestDummys\PassingTests.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="ProcessTest.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

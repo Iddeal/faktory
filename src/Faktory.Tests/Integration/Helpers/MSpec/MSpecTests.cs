@@ -19,8 +19,9 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
     {
         private string _outputDirectory;
         private static string TestDummyDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\", "TestDummys");
-        private static string FailingTestsPath = Path.Combine(TestDummyDir, "FailingTests.dll");
-        private static string PassingTestsPath = Path.Combine(TestDummyDir, "PassingTests.dll");
+        private static readonly string TestDummyDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\");
+        private static readonly string FailingTestsPath = Path.Combine(TestDummyDir, @"FailingTests\bin\debug\", "FailingTests.dll");
+        private static readonly string PassingTestsPath = Path.Combine(TestDummyDir, @"PassingTests\bin\debug\", "PassingTests.dll");
         private const string MSpecPath = nameof(MSpecPath);
         private static readonly string MSpecExePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Lib", "Machine.Specifications.Runner.Console", "mspec-clr4.exe");
 
