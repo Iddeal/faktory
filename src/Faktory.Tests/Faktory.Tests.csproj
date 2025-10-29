@@ -79,6 +79,9 @@
     <PackageReference Include="NUnit">
       <Version>3.13.3</Version>
     </PackageReference>
+    <PackageReference Include="NUnit.ConsoleRunner">
+      <Version>3.20.2</Version>
+    </PackageReference>
     <PackageReference Include="Spectre.Console.Testing">
       <Version>0.47.0</Version>
     </PackageReference>
@@ -88,18 +91,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="TestDummys\FailingTests.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestDummys\Machine.Specifications.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestDummys\Machine.Specifications.Should.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestDummys\Machine.TestAdapter.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="TestDummys\nunit.framework.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="TestDummys\PassingTests.dll">
