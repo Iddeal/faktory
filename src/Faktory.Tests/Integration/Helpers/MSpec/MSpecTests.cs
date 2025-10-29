@@ -18,12 +18,12 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
     public class MSpecTests
     {
         private string _outputDirectory;
-        private static string TestDummyDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\", "TestDummys");
+        private static readonly string MSpecNugetDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\packages\", "machine.specifications.runner.console");
         private static readonly string TestDummyDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\");
         private static readonly string FailingTestsPath = Path.Combine(TestDummyDir, @"FailingTests\bin\debug\", "FailingTests.dll");
         private static readonly string PassingTestsPath = Path.Combine(TestDummyDir, @"PassingTests\bin\debug\", "PassingTests.dll");
         private const string MSpecPath = nameof(MSpecPath);
-        private static readonly string MSpecExePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Lib", "Machine.Specifications.Runner.Console", "mspec-clr4.exe");
+        static string _mSpecExePath;
 
         [SetUp]
         public void Init()
@@ -33,6 +33,7 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
             Core.Faktory.CurrentActionResult = new ActionResult();
             _outputDirectory = Path.Combine(Path.GetTempPath(), Path.GetFileNameWithoutExtension(Path.GetTempFileName()));
             Directory.CreateDirectory(_outputDirectory);
+            _mSpecExePath = Core.Helpers.MSpec.FindRunner(MSpecNugetDir);
         }
 
         [TearDown]
@@ -58,7 +59,7 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
         [NonParallelizable]
         public void Run_NoInputFiles_ReportsErrorWithHelp()
         {
-            Config.Set(MSpecPath, MSpecExePath);
+            Config.Set(MSpecPath, _mSpecExePath);
             string mspecOptions = null;
             string[] assemblies = null;
 
@@ -71,7 +72,7 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
         [NonParallelizable]
         public void Run_EmptyAssemblies_ReportsErrorWithHelp()
         {
-            Config.Set(MSpecPath, MSpecExePath);
+            Config.Set(MSpecPath, _mSpecExePath);
             string mspecOptions = null;
             var assemblies = Array.Empty<string>();
 
@@ -85,7 +86,7 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
         public void Run_CantFindInputFiles_ReportsErrorWithHelp()
         {
             const string nonExistentTestsDll = "non-existent_tests.dll";
-            Config.Set(MSpecPath, MSpecExePath);
+            Config.Set(MSpecPath, _mSpecExePath);
             string mspecOptions = null;
             var assemblies = new[] { nonExistentTestsDll };
 
@@ -98,7 +99,7 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
         [NonParallelizable]
         public void Run_WithArgs_Succeeds()
         {
-            Config.Set(MSpecPath, MSpecExePath);
+            Config.Set(MSpecPath, _mSpecExePath);
             string mspecOptions = null;
             var assemblies = new[] { PassingTestsPath };
 
@@ -109,7 +110,7 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
         [NonParallelizable]
         public void Run_CompletedTests_RecordsTestsCompletedMessage()
         {
-            Config.Set(MSpecPath, MSpecExePath);
+            Config.Set(MSpecPath, _mSpecExePath);
             string mspecOptions = null;
             var assemblies = new[] { PassingTestsPath };
 
@@ -120,7 +121,7 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
         [NonParallelizable]
         public void Run_ContinueOnFailure_DoesNotThrowOnFaillure()
         {
-            Config.Set(MSpecPath, MSpecExePath);
+            Config.Set(MSpecPath, _mSpecExePath);
             var assemblies = new[] { FailingTestsPath };
 
             Assert.DoesNotThrow(() => Core.Helpers.MSpec.RunTests(assemblies, _outputDirectory, continueOnFailedTest: true));
@@ -130,7 +131,7 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
         [NonParallelizable]
         public void Run_WhenToldToNotContinueOnFailure_DoesThrowOnFaillure()
         {
-            Config.Set(MSpecPath, MSpecExePath);
+            Config.Set(MSpecPath, _mSpecExePath);
             var assemblies = new[] { FailingTestsPath };
 
             Assert.Throws<InvalidExitCodeException>(() => Core.Helpers.MSpec.RunTests(assemblies, _outputDirectory, continueOnFailedTest: false));
@@ -140,7 +141,7 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
         [NonParallelizable]
         public void Run_WhenTestsPass_RecordsPassingMessageOnTheActionResult()
         {
-            Config.Set(MSpecPath, MSpecExePath);
+            Config.Set(MSpecPath, _mSpecExePath);
             var assemblies = new[] { PassingTestsPath };
 
             Core.Helpers.MSpec.RunTests(assemblies, _outputDirectory, continueOnFailedTest: true);
@@ -152,7 +153,7 @@ namespace Faktory.Tests.Integration.Helpers.MSpec
         [NonParallelizable]
         public void Run_WhenTestsFail_RecordsFailingMessageOnTheActionResult()
         {
-            Config.Set(MSpecPath, MSpecExePath);
+            Config.Set(MSpecPath, _mSpecExePath);
             var assemblies = new[] { FailingTestsPath };
 
             Core.Helpers.MSpec.RunTests(assemblies, _outputDirectory, continueOnFailedTest: true);
