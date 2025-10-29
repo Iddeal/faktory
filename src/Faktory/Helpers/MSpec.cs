@@ -160,5 +160,8 @@ namespace Faktory.Core.Helpers
                     $"Assemblies not found: '{string.Join("', '", assemblies.Where(x => !File.Exists(x)))}'");
             }
         }
+
+        public static string FindRunner(string mspecPath) => Io.GetAllFilesMatching(mspecPath, "mspec-clr4.exe").FirstOrDefault();
+
     }
 }

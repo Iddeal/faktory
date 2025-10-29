@@ -173,5 +173,7 @@ namespace Faktory.Core.Helpers
                     $"Input file(s) not found: '{string.Join("', '", nonExistentFiles)}'");
             }
         }
+
+        public static string FindRunner(string nunitPath) => Io.GetAllFilesMatching(nunitPath, "nunit3-console.exe").FirstOrDefault();
     }
 }
