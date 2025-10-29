@@ -18,6 +18,7 @@ namespace Faktory.Core.Helpers
         public static void RunTests(string[] assemblies, string outputDirectory, string options = "", bool continueOnFailedTest = false)
         {
             ValidateArgs(assemblies);
+            if (options == null) throw new ArgumentNullException($"{nameof(options)} cannot be null.");
 
             if(!continueOnFailedTest && !options.Contains(StopOnError)) options += StopOnError;
 
@@ -105,7 +106,8 @@ namespace Faktory.Core.Helpers
                 {
                     foreach (var reason in testCase.Elements("reason"))
                     {
-                        var reasonMessage = reason.Element("message").Value.Trim()
+                        var reasonElement = reason.Element("message");
+                        var reasonMessage = reasonElement?.Value.Trim()
                             .Replace("\n", $"\n{new string(' ', (indent + 2) * ActionResult.IndentWidth)}");
                         ar.AddMessage(reasonMessage, indent + 2);
                     }
@@ -119,7 +121,7 @@ namespace Faktory.Core.Helpers
                     {
                         foreach (var assertion in assertions)
                         {
-                            var replaceMessage = assertion.Element("message").Value.Trim()
+                            var replaceMessage = assertion.Element("message")?.Value.Trim()
                                 .Replace("\n", $"\n{new string(' ', (indent + 2) * ActionResult.IndentWidth)}");
                             ar.AddMessage(replaceMessage, indent + 2);
                         }
@@ -128,7 +130,7 @@ namespace Faktory.Core.Helpers
                     var failure = testCase.Element("failure");
                     if (failure != null)
                     {
-                        var failureMessage = failure.Element("message").Value.Trim()
+                        var failureMessage = failure.Element("message")?.Value.Trim()
                                 .Replace("\n", $"\n{new string(' ', (indent + 2) * ActionResult.IndentWidth)}");
                         ar.AddMessage(failureMessage, indent + 2);
                     }
