@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.0.11123.170 d18.0
+VisualStudioVersion = 18.0.11123.170
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Faktory.Core", "Faktory\Faktory.Core.csproj", "{4CB73894-ED3C-42DC-900E-9561F123D9AF}"
 EndProject
@@ -20,6 +20,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PassingTests", "PassingTests\PassingTests.csproj", "{5F821BA7-B504-4660-B886-F7D1336E4BE4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FailingTests", "FailingTests\FailingTests.csproj", "{05A10078-7FC3-4817-9B04-7C54BE8592A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildTool", "BuildTool\BuildTool.csproj", "{0AFC9022-DDB9-40DE-AD94-E969D9743B7E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +51,8 @@ Global
 		{05A10078-7FC3-4817-9B04-7C54BE8592A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{05A10078-7FC3-4817-9B04-7C54BE8592A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05A10078-7FC3-4817-9B04-7C54BE8592A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AFC9022-DDB9-40DE-AD94-E969D9743B7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AFC9022-DDB9-40DE-AD94-E969D9743B7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
