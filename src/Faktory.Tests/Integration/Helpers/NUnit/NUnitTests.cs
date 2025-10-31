@@ -127,7 +127,6 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
         public void Run_WhenToldToDiscontinueOnFailedTests_PassesCorrectArgToNUnit()
         {
             Config.Set(NUnitPath, _nUnitExePath);
-            var nUnitOptions = "";
             var inputFiles = new[] { FailingTestsPath };
 
             Assert.Throws<InvalidExitCodeException>(() => Core.Helpers.NUnit.RunTests(inputFiles, _outputDirectory, continueOnFailedTest: false));
@@ -140,7 +139,6 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
         public void Run_WhenToldToDiscontinueOnFailedTestsAndOptionsIncludeArg_DoesNotDuplicateArgPassedToNUnit()
         {
             Config.Set(NUnitPath, _nUnitExePath);
-            var nUnitOptions = "--stoponerror";
             var inputFiles = new[] { FailingTestsPath };
 
             Assert.Throws<InvalidExitCodeException>(() => Core.Helpers.NUnit.RunTests(inputFiles, _outputDirectory, continueOnFailedTest: false));
@@ -165,7 +163,6 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
         public void Run_WhenToldToContinueOnFailedTests_PassesCorrectArgToNUnit()
         {
             Config.Set(NUnitPath, _nUnitExePath);
-            var nUnitOptions = "";
             var inputFiles = new[] { FailingTestsPath };
 
             Core.Helpers.NUnit.RunTests(inputFiles, _outputDirectory, continueOnFailedTest: true);
@@ -178,7 +175,6 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
         public void Run_WhenToldToContinueOnFailedTests_DoesNotThrowOnFailure()
         {
             Config.Set(NUnitPath, _nUnitExePath);
-            var nUnitOptions = "";
             var inputFiles = new[] { FailingTestsPath };
 
             Assert.DoesNotThrow(() =>  Core.Helpers.NUnit.RunTests(inputFiles, _outputDirectory, continueOnFailedTest: true));
@@ -189,7 +185,6 @@ namespace Faktory.Tests.Integration.Helpers.NUnit
         public void Run_WithArgs_Succeeds()
         {
             Config.Set(NUnitPath, _nUnitExePath);
-            var nUnitOptions = "";
             var inputFiles = new[] { PassingTestsPath };
 
             Assert.DoesNotThrow(() => Core.Helpers.NUnit.RunTests(inputFiles, _outputDirectory));
