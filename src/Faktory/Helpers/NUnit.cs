@@ -34,10 +34,10 @@ namespace Faktory.Core.Helpers
             foreach (var path in assemblies)
             {
                 var arguments = $"{options} --result={resultsPath};format=nunit3 \"{path}\" ";
-
+                var workDir = Path.GetDirectoryName(path);
                 try
                 {
-                    Process.Run(Config.Get(NUnitPath), arguments, validExitCodes: AllTestsPassedExitCode);
+                    Process.Run(Config.Get(NUnitPath), arguments, workDir, validExitCodes: AllTestsPassedExitCode);
                 }
                 catch (InvalidExitCodeException e)
                 {
