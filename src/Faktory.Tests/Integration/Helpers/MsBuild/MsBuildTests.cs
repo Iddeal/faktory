@@ -17,7 +17,7 @@ namespace Faktory.Tests.Integration.Helpers.MsBuild
     [Category("Integration")]
     public class MsBuildTests
     {
-        const string BasePath = @"..\..\..\..\MsBuildTest\";
+        const string BasePath = @"..\..\..\MsBuildTest\";
         const string MsBuildPath = @"C:\Program Files\Microsoft Visual Studio\2022\Professional\MSBuild\Current\Bin\amd64\MSBuild.exe";
 
         [SetUp]
@@ -65,8 +65,8 @@ namespace Faktory.Tests.Integration.Helpers.MsBuild
             Config.Set("MSBuildPath", MsBuildPath);
             var solutionPath = Path.Combine(BasePath, "MsBuildTest.sln");
 
-            Assert.DoesNotThrow(() => Core.Helpers.MsBuild.Run(solutionPath, "Debug","x64", args: "/v:quiet"));
-            Assert.That(File.Exists(Path.Combine(BasePath, @"bin\x64\Debug\MsBuildTest.exe")));
+            Assert.DoesNotThrow(() => Core.Helpers.MsBuild.Run(solutionPath, "Debug","Any CPU", args: "/v:quiet"));
+            Assert.That(File.Exists(Path.Combine(BasePath, @"bin\Debug\MsBuildTest.exe")));
         }
         
         [Test, Order(5)]
@@ -77,7 +77,7 @@ namespace Faktory.Tests.Integration.Helpers.MsBuild
             var solutionPath = Path.Combine(BasePath, "MsBuildTest.sln");
 
             Assert.DoesNotThrow(() => Core.Helpers.MsBuild.Clean(solutionPath));
-            Assert.False(File.Exists(Path.Combine(BasePath, @"bin\x64\Debug\MsBuildTest.exe")));
+            Assert.False(File.Exists(Path.Combine(BasePath, @"bin\Debug\MsBuildTest.exe")));
         }
     }
 }

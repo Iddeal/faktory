@@ -9,12 +9,12 @@ namespace Faktory.Core.Helpers;
 public static class MsBuild
 {
     public static string MsBuildPath => Config.Get("MSBuildPath");
-    public static void Clean(string solutionPath, string configuration = "Debug", string platform = "x64")
+    public static void Clean(string solutionPath, string configuration = "Debug", string platform = "Any CPU")
     {
         Run(solutionPath, configuration, platform, "Clean");
     }
 
-    public static void Run(string solutionPath, string configuration = "Debug", string platform = "x64", string target = "Build", bool optimize = false, string outputDir = null, string args = null)
+    public static void Run(string solutionPath, string configuration = "Debug", string platform = "Any CPU", string target = "Build", bool optimize = false, string outputDir = null, string args = null)
     {
         ExecuteMsBuild(solutionPath, configuration, platform, target, optimize, outputDir, args);
     }

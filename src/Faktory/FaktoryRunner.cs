@@ -11,7 +11,11 @@ public static class FaktoryRunner
     /// Used to write the log to the console.
     /// Useful to overwrite for unit testing.
     /// </summary>
-    public static ILogWriter LogWriter { get; set; }
+    public static ILogWriter LogWriter
+    {
+        get => Boot.Logger.Writer;
+        set => Boot.Logger.Writer = value;
+    }
     public static IProgressReporter ProgressReporter { get; set; }
 
     public static bool BootUp(string args, Action<string> updateStatus)
@@ -31,7 +35,7 @@ public static class FaktoryRunner
             Boot.Logger.Error("Please call Execute() method.");
         }
 
-        return faktory.Executed;
+        return faktory.Executed && faktory.ShowSummary;
     }
 
 }

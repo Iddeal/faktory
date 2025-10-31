@@ -32,6 +32,8 @@ namespace Faktory.Core
         /// </summary>
         public static string SourcePath => Boot.SourcePath;
         public bool Executed { get; private set; }
+        public bool ShowSummary { get; private set; }
+        public static ActionResult CurrentActionResult { get; set; }
 
         protected virtual void Configure() {
             Boot.Logger.Error("Loading with default config.");
@@ -63,6 +65,7 @@ namespace Faktory.Core
         /// </summary>
         public void Execute()
         {
+            Executed = true;
             // Load the custom Config
             try
             {
@@ -70,39 +73,46 @@ namespace Faktory.Core
             }
             catch (Exception e)
             {
+                ShowSummary = false;
                 Boot.Logger.Error(e);
                 return;
             }
 
-            Executed = true;
+            ShowSummary = !_missingRequiredOptions;
             if (_missingRequiredOptions) return;
 
-            if (BuildActions.Any() == false) Boot.Logger.Error("No Tasks found.");
+            if (BuildActions.Any() == false)
+            {
+                ShowSummary = false;
+                Boot.Logger.Error("No Tasks found.");
+            }
 
             foreach (var x in BuildActions)
             {
                 var methodName = x.Method.Name;
                 _updateStatus($"Running {methodName}()");
-                var result = new ActionResult { Name = methodName };
+                CurrentActionResult = new ActionResult { Name = methodName };
                 try
                 {
                     Boot.Logger.Info($"{methodName}() -> ", LogColor.Green);
                     Boot.Logger.IndentLevel = 1;
                     Reporter.ReportStartProgress(methodName);
-                    result.Duration = ExecuteAndTimeAction(x);
+                    CurrentActionResult.Duration = ExecuteAndTimeAction(x);
                     Reporter.ReportEndProgress(methodName);
+                    ShowSummary = true;
                 }
                 catch (Exception e)
                 {
-                    result.LastException = e;
+                    CurrentActionResult.LastException = e;
                     Boot.Logger.Error(e);
+                    ShowSummary = false;
                     return;
                 }
                 finally
                 {
                     Boot.Logger.IndentLevel = 0;
-                    if (!result.Success) Reporter.ReportFailure($"{methodName} failed with - {result.LastException.Message}");
-                    ActionResults.Add(result);
+                    if (!CurrentActionResult.Success) Reporter.ReportFailure($"{methodName} failed with - {CurrentActionResult.LastException.Message}");
+                    ActionResults.Add(CurrentActionResult);
                 }
             }
         }

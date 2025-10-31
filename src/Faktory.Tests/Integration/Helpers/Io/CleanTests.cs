@@ -38,15 +38,16 @@ namespace Faktory.Tests.Integration.Helpers.Io
             // Arrange 
 
             // Create a file and lock it
-            TestHelpers.Disk.CreateFile(BasePath, "lockedFile_clean.txt");
-            var filePath = Path.Combine(BasePath, "lockedFile_clean.txt");
+            const string fileName = "lockedFile_clean.txt";
+            TestHelpers.Disk.CreateFile(BasePath, fileName);
+            var filePath = Path.Combine(BasePath, fileName);
 
             Task.Run(() => TestHelpers.Disk.LockFile(filePath, 4));
+            Thread.Sleep(1000); // give LockFile time to lock the file
 
             // Act - Clean the path
             var exception = Assert.Throws<Exception>(() => Core.Helpers.Io.CleanDirectory(BasePath));
 
-            Thread.Sleep(4000); // Wait for Task.Run to exit
             // Assert
             StringAssert.Contains($"Can't delete `{filePath}`. It's locked by ", exception.Message);
         }

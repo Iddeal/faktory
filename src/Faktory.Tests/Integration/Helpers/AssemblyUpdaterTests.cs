@@ -10,7 +10,7 @@ namespace Faktory.Tests.Integration.Helpers
     [Category("Integration")]
     public class AssemblyUpdaterTests
     {
-        const string assemblyInfoPath = @"..\..\..\..\MsBuildTest\Properties\AssemblyInfo.cs";
+        const string assemblyInfoPath = @"..\..\..\MsBuildTest\Properties\AssemblyInfo.cs";
 
         [Test, Order(1)]
         [NonParallelizable]
