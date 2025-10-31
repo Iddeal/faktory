@@ -35,7 +35,7 @@ public static class FaktoryRunner
             Boot.Logger.Error("Please call Execute() method.");
         }
 
-        return faktory.Executed;
+        return faktory.Executed && faktory.ShowSummary;
     }
 
 }

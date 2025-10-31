@@ -32,6 +32,7 @@ namespace Faktory.Core
         /// </summary>
         public static string SourcePath => Boot.SourcePath;
         public bool Executed { get; private set; }
+        public bool ShowSummary { get; private set; }
         public static ActionResult CurrentActionResult { get; set; }
 
         protected virtual void Configure() {
@@ -64,6 +65,7 @@ namespace Faktory.Core
         /// </summary>
         public void Execute()
         {
+            Executed = true;
             // Load the custom Config
             try
             {
@@ -71,14 +73,19 @@ namespace Faktory.Core
             }
             catch (Exception e)
             {
+                ShowSummary = false;
                 Boot.Logger.Error(e);
                 return;
             }
 
-            Executed = true;
+            ShowSummary = !_missingRequiredOptions;
             if (_missingRequiredOptions) return;
 
-            if (BuildActions.Any() == false) Boot.Logger.Error("No Tasks found.");
+            if (BuildActions.Any() == false)
+            {
+                ShowSummary = false;
+                Boot.Logger.Error("No Tasks found.");
+            }
 
             foreach (var x in BuildActions)
             {
@@ -92,11 +99,13 @@ namespace Faktory.Core
                     Reporter.ReportStartProgress(methodName);
                     CurrentActionResult.Duration = ExecuteAndTimeAction(x);
                     Reporter.ReportEndProgress(methodName);
+                    ShowSummary = true;
                 }
                 catch (Exception e)
                 {
                     CurrentActionResult.LastException = e;
                     Boot.Logger.Error(e);
+                    ShowSummary = false;
                     return;
                 }
                 finally
