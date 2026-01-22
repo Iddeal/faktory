@@ -14,9 +14,10 @@ public static class Process
     /// <param name="command">Process to run.</param>
     /// <param name="arguments">Optional arguments</param>
     /// <param name="workingDirectory">Defaults to script directory.</param>
+    /// <param name="maskArguments">Indicates it the arguments should be masked</param>
     /// <param name="validExitCodes">List of exit codes that are considered Success.</param>
     /// <returns></returns>
-    public static void Run(string command, string arguments = "", string workingDirectory = null, params int[] validExitCodes)
+    public static void Run(string command, string arguments = "", string workingDirectory = null, bool maskArguments = false, params int[] validExitCodes)
     {
         var standardOut = new List<string>();
         var standardError = new List<string>();
@@ -32,7 +33,8 @@ public static class Process
             process.StartInfo.CreateNoWindow = true;
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 
-            Boot.Logger.Info($"Running '{command} {arguments}'...");
+            var argsForOutput = maskArguments ? "**********" : arguments;
+            Boot.Logger.Info($"Running '{command} {argsForOutput}'...");
             process.Start();
 
             //Capture the output to the log
